@@ -166,3 +166,23 @@ A full negacyclic NTT of degree (d) over (mathbb F_q) requires a primitive (2d)-
 ## 9. Status
 
 This is a target workspace design, not an inventory of implemented crates. The repository currently contains research documents, the Akita paper and the prior architecture review. There is no Cargo workspace, no agent runtime, no proof SDK and no production verifier.
+
+
+## 10. Agentic runtime normative specifications
+
+The agentic crate list above is an initial decomposition. The normative runtime contract is now defined in:
+- [AGENTIC_SYSTEM_SPEC.md](AGENTIC_SYSTEM_SPEC.md): typed graph, task/artifact model, BSP barriers, capability/policy semantics, effect journal, proof and evidence boundaries, error model and test programme.
+- [COMPUTE_LIFECYCLE.md](COMPUTE_LIFECYCLE.md): complete request-to-evidence lifecycle, QALABASH R_spend flow and crash-recovery matrix.
+- [AJENTIR_INTEGRATION.md](AJENTIR_INTEGRATION.md): adaptation of AJENTIR's BSP super-step, frozen frontier, immutable inputs, typed reducers, checkpoints, cost ledger, simulator and effect-intent journal.
+- [PRODUCT_LANDSCAPE.md](PRODUCT_LANDSCAPE.md): market categories, relevant products, integration choices and product positioning.
+
+### Runtime crate decomposition update
+
+The earlier list is a coarse platform map. The detailed target decomposition is:
+- Foundation: aqiten-core, aqiten-codec, aqiten-types, aqiten-state, aqiten-store, aqiten-journal.
+- Deterministic runtime: aqiten-graph, aqiten-kernel, aqiten-scheduler, aqiten-runtime, aqiten-sim.
+- Authority/effects: aqiten-identity, aqiten-capability, aqiten-policy, aqiten-approval, aqiten-effect, aqiten-gateway.
+- Computation/proof: aqiten-relation, aqiten-compute, aqiten-proof-api, aqiten-prover, aqiten-verifier, aqiten-evidence.
+- Adapters/operations: aqiten-agent, aqiten-model, aqiten-mcp, aqiten-a2a, aqiten-memory, aqiten-telemetry, aqiten-api, aqiten-cli, aqiten-eval.
+
+Do not create all crates immediately. Establish contracts and tests in dependency order. The verifier must remain independent of runtime, model, agent, gateway and prover crates.
