@@ -1,0 +1,17 @@
+# P0: audit and formalisation (not yet done)
+
+Inputs: the Akita paper (ePrint 2026/1983, to be supplied in full including
+Appendices C, D, F, G), the Akita repository (read-only reference), and the
+literature on lattice ZK, hiding PCS and Fiat-Shamir in the QROM.
+
+Deliverables:
+1. `spec/p0_audit.tex`: what Akita proves, under which assumptions, and where
+   each of its messages leaks (sum-check rounds, fold commitments, terminal
+   response), message by message.
+2. Formal games G1-G3 and the leakage table feeding them.
+3. A citations table: every cited result checked against its source, with
+   status verified / unverified.
+4. Parameter questions to settle in P1 (modulus form, challenge family,
+   digit base, masking strategy: flooding vs rejection).
+
+Gate: P1 does not start until (1)-(3) are reviewed.
