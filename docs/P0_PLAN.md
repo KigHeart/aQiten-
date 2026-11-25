@@ -22,8 +22,8 @@ the mathematical and architecture questions below.
    be checked against primary sources.
 4. Construction proposal: spec/aqt002_construction_plan.tex (TR-002); a plan,
    not a proved construction.
-5. Independent mathematical review: spec/aqt002_independent_review.md on PR #1.
-6. Ring architecture gate: spec/aqt003_ring_architecture_gate.md on PR #1.
+5. Independent mathematical review: tracked in PR #1 (not yet merged).
+6. Ring architecture gate: tracked in PR #1 (not yet merged).
    Exact reference arithmetic is required; NTT support is conditional on a
    verified root-of-unity certificate.
 7. Architecture review: docs/ARCHITECTURE_REVIEW.md; reconciles the new crate
