@@ -117,3 +117,21 @@ The first vertical is private, verifiable financial computation using the QALABA
 - portable evidence export.
 
 This validates the architecture without handling real money or production secrets.
+
+
+## 7. Runtime semantics: BSP and typed result flow
+
+The runtime advances a graph through bulk-synchronous-parallel super-steps. At each step it freezes the frontier, constructs immutable node input views, reserves budgets, dispatches eligible nodes, journals terminal results, validates exact frontier coverage, merges state writes in canonical order, routes the next frontier and commits a content-addressed checkpoint. A node cannot observe sibling writes from the same step before commit.
+
+An agent result is a typed artifact, not a free-form message. It binds schema/version, producer identity/version, run/step/node/attempt, input artifact digests, output digest, status, provenance, usage/cost and optional evidence references. Downstream nodes declare which artifacts and versions they accept. Fan-in semantics (all-required, any-accepted, quorum, deterministic evaluator, consensus predicate or human adjudication) are explicit. Quorum is not truth and correlated agents are not independent witnesses.
+
+The runtime design adapts AJENTIR's BSP, typed-state, checkpoint, cost-ledger and effect-journal principles without introducing an AJENTIR code dependency. See [AJENTIR_INTEGRATION.md](AJENTIR_INTEGRATION.md).
+
+## 8. Normative specifications
+
+This document is the platform overview. The normative contracts and detailed lifecycle are defined in:
+- [AGENTIC_SYSTEM_SPEC.md](AGENTIC_SYSTEM_SPEC.md)
+- [COMPUTE_LIFECYCLE.md](COMPUTE_LIFECYCLE.md)
+- [PRODUCT_LANDSCAPE.md](PRODUCT_LANDSCAPE.md)
+
+These documents are design targets. They do not imply that the runtime, effect gateway, proof service or verifier has been implemented.
