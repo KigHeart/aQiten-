@@ -18,8 +18,12 @@ construction plan contains open proof obligations; it is not a security proof.
   and its explicitly open proof obligations.
 - `spec/aqt002_independent_review.md` — blocking review questions before
   cryptographic implementation.
+- `spec/aqt003_ring_architecture_gate.md` — modulus/NTT compatibility result
+  and the three viable architecture choices.
 - `research/test_box_rejection.py` — exhaustive finite-domain check of one
   local masking identity; not a cryptographic test or proof.
+- `research/ring_profile.py` and `research/test_ring_profile.py` — exact
+  reference negacyclic multiplication and a small-candidate NTT root audit.
 - `papers/akita.pdf` — reference paper.
 
 ## Engineering discipline
@@ -30,7 +34,7 @@ construction plan contains open proof obligations; it is not a security proof.
    covered by a simulator argument.
 4. No post-quantum/QROM security claim until the relevant reductions are proved.
 5. Run the local research checks with:
-   `python -m unittest research.test_box_rejection -v`.
+   `python -m unittest research.test_box_rejection research.test_ring_profile -v`.
 
 Maintained by Tilil Engineering Group. Licensed under Apache-2.0 OR MIT.
 Akita is a separate project of LayerZero Labs / a16z crypto (MIT OR Apache-2.0);
