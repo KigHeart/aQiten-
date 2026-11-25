@@ -27,9 +27,16 @@ implementation is gated on closing the blocking questions in
    (TR-TEG-2026-AQT-002). This is a research plan, not a proved construction.
 5. **Independent review:** `spec/aqt002_independent_review.md` records the
    blocking mathematical questions and the order for resolving them.
-6. **Executable local check:** `research/test_box_rejection.py` exhaustively
-   checks the finite-domain box-rejection identity for small instances. It
-   does not establish transcript-level zero knowledge.
+6. **Executable local checks:** `research/test_box_rejection.py` checks the
+   finite-domain box-rejection identity; `research/test_ring_profile.py`
+   checks reference negacyclic arithmetic and root-of-unity compatibility.
+   Neither establishes transcript-level zero knowledge or cryptographic
+   security.
+7. **Ring architecture gate:** `spec/aqt003_ring_architecture_gate.md`
+   establishes that (q\equiv5\pmod8) is incompatible with a full
+   base-field negacyclic NTT at power-of-two degree (d\ge4). The exact
+   reference multiplication is now executable; the protocol modulus and
+   transform architecture remain unselected.
 
 ## Akita sections still to read
 
@@ -39,9 +46,12 @@ each section is completed; do not claim the audit is complete prematurely.
 
 ## Gate to P1
 
-Before implementing `aqiten-ring` or any cryptographic primitive:
+Before implementing cryptographic primitives:
 
-- resolve the ring modulus / NTT compatibility question;
+- select one ring architecture (keep (q\equiv5\pmod8) without a full
+  NTT, change the modulus and re-prove challenge properties, or use a
+  separately specified CRT/extension strategy);
+- extract Akita's concrete schedule values ((q,d,n,m)) at every level;
 - specify the augmented commitment and fold vector layouts with dimensions;
 - finish the source reading and verify the concrete schedule catalogue;
 - complete the commitment, revealed-functional, and masked-sum-check definitions;
@@ -49,9 +59,9 @@ Before implementing `aqiten-ring` or any cryptographic primitive:
 - produce a reviewed simulator proof and parameter inequalities, or mark the
   relevant construction as unresolved and choose a different design.
 
-The first P1 crate, when the gate is met, should begin with exact reference
-arithmetic. An NTT is permitted only for parameter sets whose required
-root-of-unity conditions are verified.
+The first Rust crate should begin with exact reference arithmetic. An NTT is
+permitted only for parameter sets whose required root-of-unity conditions
+are verified. Do not couple correctness to an assumed transform.
 
 ## Status snapshot — 2026-11-25
 
@@ -59,5 +69,7 @@ root-of-unity conditions are verified.
 - The local box-rejection identity passed 785 exhaustive fixed-witness
   distribution cases, together with the Bernoulli lower-bound and
   (Y=2NB) acceptance checks.
-- No Rust crates or cryptographic implementation exist yet. The new CI workflow runs the finite-domain research checks on pushes and pull requests.
+- Exact reference negacyclic multiplication and an NTT root checker are now
+  present, with CI tests.
+- No Rust crates or cryptographic implementation exist yet.
 - No zero-knowledge or QROM security claim is established for aQiten.
