@@ -1,6 +1,6 @@
 # aQiten workspace and platform tree (rev. 0.2, 2026-11-25)
 
-**Status: target architecture; no Rust workspace or implementation exists yet.** This document is normative for the proposed repository structure. Product planes are not identical to Cargo crates. Crates are introduced only when their contracts and tests are ready.
+**Status: target architecture; no Rust workspace or implementation exists yet.** This document is normative for the proposed repository structure. Product planes are not identical to Cargo crates. Crates are introduced only when their contracts and tests are ready. The platform-level trust flow is shown in [PLATFORM_DAG.md](PLATFORM_DAG.md).
 
 ## 1. System boundary
 
