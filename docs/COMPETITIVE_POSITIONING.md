@@ -37,7 +37,15 @@ The 2026 PCS survey reports a persistent trade-off: lattice and hash-based post-
 | MCP and A2A | Tool and agent interoperability protocols | Standardised connectivity and typed interfaces | Connectivity is not authority. aQiten should provide policy/capability enforcement at the effect boundary. |
 | Authenticated-workflow research | Cryptographic integrity and policy enforcement across agent workflow boundaries | Authenticate tool/data/context boundaries and enforce intent | A close conceptual neighbour. aQiten must distinguish itself through independently verifiable computation and post-quantum ZK proofs, not claim exclusive ownership of cryptographic agent security. |
 
-## 4. Where aQiten could be distinct
+## 4. Direct competitive correction: authority and action runtimes already exist
+
+Arcade markets an enterprise actions runtime with identity-provider-backed authentication, per-action authorization, delegated user scope, MCP federation, tool execution and centralized governance. Composio offers managed per-user authentication, a large application/tool catalogue, session-based tool discovery, execution and MCP connectivity. Authenticated Workflows research describes a cryptographic integrity and runtime-policy layer across multiple agent frameworks. These are direct adjacencies, not distant analogies.
+
+Therefore, capability checks and an effect gateway are necessary but not sufficient differentiators. aQiten must not claim that it uniquely secures tool calls or uniquely applies cryptography to agent workflows. It should integrate Arcade/Composio-like action providers where useful and benchmark against Authenticated Workflows' claims.
+
+The stronger aQiten hypothesis is the combination of a deterministic durable BSP runtime, typed agent-result artifacts and lineage, explicit computation relations, an independent proof-verification boundary, and portable evidence graphs that bind computation to authorization and effect records. This combination still requires an implemented prototype and measured evidence.
+
+## 5. Where aQiten could be distinct
 
 The intended combined workflow is:
 
@@ -52,7 +60,7 @@ The intended combined workflow is:
 
 The combination is the product hypothesis. Each component has precedents; integration, assurance and usability are the challenge.
 
-## 5. What would make the comparison credible
+## 6. What would make the comparison credible
 
 Before claiming technical leadership, publish reproducible results against relevant baselines:
 
@@ -82,7 +90,7 @@ Before claiming technical leadership, publish reproducible results against relev
 - proof/evidence envelope validated by a second organisation;
 - synthetic-data financial demonstrator.
 
-## 6. Positioning statement
+## 7. Positioning statement
 
 **aQiten is being designed as a trust and verification layer for autonomous computation: agents coordinate work, deterministic authority controls actions, cryptographic proofs establish specified computational claims, and portable evidence lets independent parties verify the result.**
 
@@ -93,7 +101,7 @@ Do not position aQiten as:
 - a proof that an AI model is truthful;
 - production-safe post-quantum infrastructure before the QROM and lattice security arguments are complete.
 
-## 7. Sources for the living comparison
+## 8. Sources for the living comparison
 
 - LayerZero, Akita announcement (9 September 2026): https://layerzero.network/blog/introducing-akita
 - JoltBook, Akita backend and current feature boundaries (clear proofs; ZK unsupported in the documented Akita path): https://jolt.a16zcrypto.com/how/akita.html
@@ -106,3 +114,7 @@ Do not position aQiten as:
 - Rajagopalan and Rao, Authenticated Workflows: A Systems Approach to Protecting Agentic AI (2026): https://arxiv.org/abs/2602.10465
 
 This comparison should be updated when project versions, papers, deployments and benchmarks change.
+
+- Arcade enterprise actions runtime: https://www.arcade.dev/ and https://www.arcade.dev/product/
+- Composio integration/authentication platform: https://docs.composio.dev/docs and https://docs.composio.dev/docs/authentication
+- LangChain Deep Agents: https://docs.langchain.com/oss/javascript/deepagents/overview
