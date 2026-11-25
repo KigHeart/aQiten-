@@ -26,7 +26,7 @@ This is a product thesis to validate, not an established market position.
 | LaBRADOR / LUNA / Greyhound and related lattice ZK work | Lattice ZK arguments and PCS | Established research lines for compact lattice proofs and polynomial evaluation | Must be included in technical literature and benchmark reviews before selecting a construction. |
 | FRI/STARK systems | Hash-based proof systems | Transparent, post-quantum-oriented proof architecture with mature implementations and ecosystems | Important alternative baseline; aQiten must compare full proof size, prover/verifier cost, assumptions and setup model. |
 
-The 2026 PCS survey reports a persistent trade-off: lattice and hash-based post-quantum schemes tend to incur larger proofs and/or higher computation than pairing-based systems, while assumptions and setup models differ. Its synthesized performance figures are not a substitute for same-hardware benchmarks.
+The 2026 PCS survey reports a persistent trade-off: lattice and hash-based post-quantum schemes tend to incur larger proofs and/or higher computation than pairing-based systems, while assumptions and setup models differ. Its synthesized performance figures are not a substitute for same-hardware benchmarks. A critical implementation nuance: the current JoltBook Akita page describes the Akita backend as supporting clear proofs and states that it does not support zero knowledge in that integration (the `akita` and `zk` features are mutually exclusive). This is a version-specific integration statement, not a claim that no future Akita ZK work is possible. It makes full-transcript hiding/ZK a legitimate research target for aQiten, but does not establish that aQiten has solved it.
 
 ## 3. Agent framework and runtime comparisons
 
@@ -96,7 +96,7 @@ Do not position aQiten as:
 ## 7. Sources for the living comparison
 
 - LayerZero, Akita announcement (9 September 2026): https://layerzero.network/blog/introducing-akita
-- JoltBook, Akita backend and current feature boundaries: https://jolt.a16zcrypto.com/how/akita.html
+- JoltBook, Akita backend and current feature boundaries (clear proofs; ZK unsupported in the documented Akita path): https://jolt.a16zcrypto.com/how/akita.html
 - Akita repository: https://github.com/LayerZero-Labs/akita
 - a16z, Lattice Jolt announcement (9 September 2026): https://a16zfrontier.com/posts/article/lattice-snarks-jolt-post-quantum-faster/
 - Boneh and Chen, LatticeFold+ (IACR ePrint 2025/247): https://eprint.iacr.org/2025/247
