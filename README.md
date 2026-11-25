@@ -33,6 +33,7 @@ Akita is a read-only mathematical and differential-testing reference, not a code
 ## Architecture and design documents
 
 - [Product architecture](docs/PLATFORM_ARCHITECTURE.md) — four planes, product boundaries and end-to-end workflow.
+- [Platform trust/dependency diagram](docs/PLATFORM_DAG.md) — agent, authority, proof and evidence flow.
 - [Rust workspace tree](docs/TREE.md) — target crates, dependency rules and build sequence.
 - [Agent security model](docs/AGENTIC_SECURITY_MODEL.md) — identities, capabilities, policy, delegation and side-effect controls.
 - [Competitive positioning](docs/COMPETITIVE_POSITIONING.md) — comparison with PCS, zkVM, folding and agent-runtime projects.
@@ -40,7 +41,7 @@ Akita is a read-only mathematical and differential-testing reference, not a code
 - [Project charter](CHARTER.md) — security goals and epistemic rules.
 - [P0 audit plan](docs/P0_PLAN.md) — outstanding Akita audit and construction questions.
 - [Architecture review](docs/ARCHITECTURE_REVIEW.md) — prior cryptographic crate-boundary decisions.
-- [Dependency diagram](docs/crate_dag.png) — original cryptographic-core DAG; it does not yet depict the full agentic platform.
+- [Original cryptographic dependency diagram](docs/crate_dag.png) — crypto-core DAG only, not the full platform.
 - [Akita research reference](papers/akita.pdf) — retained for research comparison.
 
 ## Non-negotiable trust boundaries
