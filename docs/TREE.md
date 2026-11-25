@@ -44,12 +44,12 @@ aqiten-            (workspace)
 |  |- aqiten-error            L0  shared errors, checked integer formulas
 |  |- aqiten-codec            L0  canonical serialization, strict decoding (reject non-canonical)
 |  |- aqiten-field            L1  prime field q (q = 5 mod 8), extension E, constant-time ops
-|  |- aqiten-ring             L1  R_q = F_q[X]/(X^d+1), NTT, balanced digits, exact integer norms
+|  |- aqiten-ring             L1  R_q = F_q[X]/(X^d+1), exact reference multiplication, balanced digits, exact integer norms; optional certified NTT
 |  |- aqiten-estimator        L1  MSIS + MLWE cost models (offline, no protocol deps)
 |  |- aqiten-transcript       L2  domain-separated, coordinate-indexed oracle queries, round ledger, query counter
 |  |- aqiten-challenges       L2  challenge families, certified operator-norm predicate, bounded samplers
 |  |- aqiten-params           L3  solves inequalities I1-I6; emits certificate; independent validator
-|  |- aqiten-commit           L3  hiding two-tier commitment (A,B,D,F,H with randomness columns)
+|  |- aqiten-commit-core      L3  public commitment parameters, encodings and validation types\n|  |- aqiten-commit-prover    L3  witness-side commitment creation and randomness\n|  |- aqiten-commit-verifier  L3  public verification equations only
 |  |- aqiten-sumcheck         L3  plain + masked sum-check (degree <= 3), fused row support
 |  |- aqiten-fold             L4  masked fold: mask commitment, box rejection, extraction harness hooks
 |  |- aqiten-schedule         L4  schedule artifacts, round ledger, Tree(sch) computation, validator
@@ -72,7 +72,7 @@ aqiten-            (workspace)
 Dependency DAG (arrows point to what a crate depends on; the rendered dependency map is docs/crate_dag.png):
 
 ```
-pcs --> prover --> fold --> {commit, sumcheck, challenges, transcript, schedule, params}
+pcs --> prover --> fold --> {commit-prover, sumcheck, challenges, transcript, schedule, params}
 pcs --> verifier --> {types, sumcheck, transcript, commit-verifier, params}
 pcs --> setup  --> {commit-prover (only if setup creates commitments), types, params}
 types --> {params, ring, codec}
