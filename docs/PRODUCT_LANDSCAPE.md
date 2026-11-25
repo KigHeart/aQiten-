@@ -198,3 +198,46 @@ This is narrower and more defensible than claiming aQiten is a universal agent f
 - LatticeFold+: https://eprint.iacr.org/2025/247
 
 Vendor documentation describes vendor-supported functionality, not independent comparative validation. Attribute research claims and reproduce benchmarks before using them as aQiten performance/security claims.
+
+
+## 6. Closest product adjacencies — do not overlook these
+
+### Arcade: actions runtime and agent authorization
+
+Arcade is the closest commercial adjacency to aQiten's authority/effect-gateway plane. Its current product positioning includes identity-provider-backed authentication, authorization on each action, delegated user scope, managed/custom tools, MCP federation, tool discovery, execution reliability and a governance control plane. This means aQiten cannot credibly differentiate merely by saying that it mediates agent tool calls or checks permissions outside the model.
+
+**aQiten response:** treat Arcade as an integration option and competitive benchmark for the gateway. aQiten's distinctive work must extend beyond action mediation into deterministic BSP execution, typed agent-result lineage, formal computation, proof verification and evidence that can be independently checked without trusting aQiten's control plane.
+
+Official product pages: https://www.arcade.dev/ and https://www.arcade.dev/product/
+
+### Composio: integration, authentication and tool execution platform
+
+Composio provides a broad catalogue of app/tool integrations, per-user connected accounts, managed authentication, session-based tool discovery, MCP endpoints, triggers and sandboxed execution. It reduces the need for an agent platform to build and maintain a huge integration catalogue or credential-handling layer.
+
+**aQiten response:** do not build thousands of SaaS connectors. Define a provider-neutral Tool Adapter and Effect Gateway contract; integrate Composio or another connector provider where appropriate. aQiten must still enforce its own run/task capability, budget, approval and evidence semantics at its boundary. A connector's authentication is not a proof that a task's business relation is valid.
+
+Official docs: https://docs.composio.dev/docs and https://docs.composio.dev/docs/authentication
+
+### LangChain Deep Agents and harness products
+
+Deep Agents adds planning, subagent delegation, filesystem/context management, memory, approval and execution-environment capabilities on top of LangChain/LangGraph. This further confirms that aQiten should not compete on task planning, subagent spawning, long-context management or sandbox UX alone.
+
+Official docs: https://docs.langchain.com/oss/javascript/deepagents/overview
+
+### Broader product longlist
+
+The main framework comparison should also keep these products in the watchlist: LangChain, LangChain Deep Agents, Vercel AI SDK, Haystack, DSPy, Letta, Semantic Kernel, Spring AI, Flowise, n8n, AutoGPT, Pydantic Logfire and provider-specific agent SDKs. They span agent harnesses, model/application SDKs, memory, orchestration, low-code workflow and observability rather than one interchangeable category.
+
+The observability/evaluation watchlist should include Langfuse, LangSmith, Arize Phoenix/AX, Braintrust, W&B Weave, Comet Opik, Datadog, Splunk/Galileo, AgentOps, Helicone, Portkey, Traceloop/OpenLLMetry, Langtrace, SigNoz, HoneyHive, Maxim AI, Confident AI/DeepEval, Ragas, promptfoo and Inspect. Evaluate the product's actual function: tracing, online evaluation, offline test, red-teaming, guardrail enforcement and action blocking are different capabilities.
+
+## 7. Strategic implication
+
+The nearest substitutes are not only agent frameworks. Arcade and Composio already cover much of the integration/auth/action layer, while Authenticated Workflows is a close research-level security architecture. Therefore:
+
+- aQiten should integrate existing tool/auth products instead of rebuilding connector catalogues;
+- aQiten should not claim unique ownership of capability security or cryptographic workflow integrity;
+- the core runtime needs demonstrably stronger state, determinism, durability, typed artifact lineage and computation semantics;
+- the proof layer must establish useful domain claims that existing action runtimes do not establish;
+- evidence must be portable and independently verifiable, not merely an audit log in a vendor dashboard.
+
+The commercial test is whether a buyer needs independently checkable computational correctness and provenance across a multi-agent workflow—not simply secure access to business APIs.
