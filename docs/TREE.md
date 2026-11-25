@@ -44,12 +44,14 @@ aqiten-            (workspace)
 |  |- aqiten-error            L0  shared errors, checked integer formulas
 |  |- aqiten-codec            L0  canonical serialization, strict decoding (reject non-canonical)
 |  |- aqiten-field            L1  prime field q (q = 5 mod 8), extension E, constant-time ops
-|  |- aqiten-ring             L1  R_q = F_q[X]/(X^d+1), NTT, balanced digits, exact integer norms
+|  |- aqiten-ring             L1  R_q = F_q[X]/(X^d+1), exact reference multiplication, balanced digits, exact integer norms; optional certified NTT
 |  |- aqiten-estimator        L1  MSIS + MLWE cost models (offline, no protocol deps)
 |  |- aqiten-transcript       L2  domain-separated, coordinate-indexed oracle queries, round ledger, query counter
 |  |- aqiten-challenges       L2  challenge families, certified operator-norm predicate, bounded samplers
 |  |- aqiten-params           L3  solves inequalities I1-I6; emits certificate; independent validator
-|  |- aqiten-commit           L3  hiding two-tier commitment (A,B,D,F,H with randomness columns)
+|  |- aqiten-commit-core      L3  public commitment parameters, encodings and validation types
+|  |- aqiten-commit-prover    L3  witness-side commitment creation and randomness
+|  |- aqiten-commit-verifier  L3  public verification equations only
 |  |- aqiten-sumcheck         L3  plain + masked sum-check (degree <= 3), fused row support
 |  |- aqiten-fold             L4  masked fold: mask commitment, box rejection, extraction harness hooks
 |  |- aqiten-schedule         L4  schedule artifacts, round ledger, Tree(sch) computation, validator
@@ -69,22 +71,27 @@ aqiten-            (workspace)
 `- tools/       ci-local.sh, estimator reproduction scripts
 ```
 
-Dependency DAG (arrows point to what a crate depends on):
+Dependency DAG (arrows point to what a crate depends on; the rendered dependency map is docs/crate_dag.png):
 
 ```
-pcs --> prover --> fold --> {commit, sumcheck, challenges, transcript, schedule, params}
-pcs --> verifier --> {types, sumcheck, transcript, commit(verify-only), params}
-pcs --> setup  --> {commit, types, params}
+pcs --> prover --> fold --> {commit-prover, sumcheck, challenges, transcript, schedule, params}
+pcs --> verifier --> {types, sumcheck, transcript, commit-verifier, params}
+pcs --> setup  --> {commit-prover (only if setup creates commitments), types, params}
 types --> {params, ring, codec}
 schedule --> {params, challenges}
 params --> {estimator, ring, challenges}
-commit --> {ring, params}      sumcheck --> {ring, field, transcript}
+commit-core --> {ring, params}   commit-prover --> commit-core   commit-verifier --> commit-core
+sumcheck --> {ring, field, transcript}
 challenges --> {ring, transcript}   transcript --> {field, error}
 ring --> {field, codec, error}
 sim, attacks, akita-oracle, bench : test/dev-only, never in verifier path
 ```
-Rule: `aqiten-verifier` must not depend on `aqiten-prover`, `aqiten-fold` or `aqiten-sim`
+Rule: `aqiten-verifier` must not depend on `aqiten-prover`, `aqiten-fold`, `aqiten-setup` or `aqiten-sim`
 (enforced by a cargo-deny/CI check, as Akita does).
+
+**Commitment boundary:** the preferred implementation splits `aqiten-commit` into `aqiten-commit-core`, `aqiten-commit-prover`, and `aqiten-commit-verifier`. The verifier must not compile randomness generation or witness-side commitment creation. If feature-gating is used instead, CI must build the verifier with default features disabled and inspect the dependency tree. See `docs/ARCHITECTURE_REVIEW.md`.
+
+**Ring constraint:** a full negacyclic NTT of degree `d` over `F_q` requires `2d | (q-1)`. The current `q = 5 mod 8` condition is incompatible with a full base-field NTT for power-of-two `d >= 4`. Therefore the ring's required backend is exact reference multiplication; an NTT is optional only with a verified root certificate and a separately approved parameter profile. Do not change `q` without re-proving the challenge-set arguments.
 
 ## 3. Build order (one crate at a time, each complete and runnable)
 
