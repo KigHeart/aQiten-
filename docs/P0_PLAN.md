@@ -59,5 +59,5 @@ root-of-unity conditions are verified.
 - The local box-rejection identity passed 785 exhaustive fixed-witness
   distribution cases, together with the Bernoulli lower-bound and
   (Y=2NB) acceptance checks.
-- No Rust crates, cryptographic implementation, or CI workflows exist yet.
+- No Rust crates or cryptographic implementation exist yet. The new CI workflow runs the finite-domain research checks on pushes and pull requests.
 - No zero-knowledge or QROM security claim is established for aQiten.
