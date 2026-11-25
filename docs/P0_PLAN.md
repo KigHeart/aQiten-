@@ -1,28 +1,75 @@
-# P0: audit and formalisation (not yet done)
+# P0: audit, formalisation, and construction review
 
-Inputs: the Akita paper (ePrint 2026/1983, to be supplied in full including
-Appendices C, D, F, G), the Akita repository (read-only reference), and the
-literature on lattice ZK, hiding PCS and Fiat-Shamir in the QROM.
+P0 is **partially complete, not closed**. The reports now in `spec/` capture
+the sections of Akita read so far and a proposed construction, but the source
+audit and citation verification remain incomplete. P1 cryptographic
+implementation is gated on closing the blocking questions in
+`spec/aqt002_independent_review.md`.
 
-Deliverables:
-1. `spec/p0_audit.tex`: what Akita proves, under which assumptions, and where
-   each of its messages leaks (sum-check rounds, fold commitments, terminal
-   response), message by message.
-2. Formal games G1-G3 and the leakage table feeding them.
-3. A citations table: every cited result checked against its source, with
-   status verified / unverified.
-4. Parameter questions to settle in P1 (modulus form, challenge family,
-   digit base, masking strategy: flooding vs rejection).
+## Inputs
 
-Gate: P1 does not start until (1)-(3) are reviewed.
+- `papers/akita.pdf` (168-page Akita paper, ePrint 2026/1983).
+- Akita repository as a read-only reference.
+- Primary literature on lattice commitments, lattice zero knowledge,
+  Fiat–Shamir in the QROM, and quantum extraction.
 
-## Status (2026-11-25)
-`spec/aqt001_p0_audit.tex` (TR-TEG-2026-AQT-001, Rev. 1.0) delivers items 1 and 2 for the sections
-of the paper read so far, and lists exactly what is still unread (see its Sec. 1) and the P1 gate.
-Item 3 (citation table) is not done: literature claims for the QROM track are unverified.
+## Deliverables and status
 
-## Update (2026-11-25, later)
-`spec/aqt002_construction_plan.tex` (TR-TEG-2026-AQT-002) gives the construction plan: principles D1-D6,
-masked fold (box rejection, committed mask, extraction lemma), revealed-functional lemma (open for structured
-weights, item Z3), masked sum-check, parameter inequalities I1-I6, crate plan, QROM routes Q1-Q3, milestones.
-Still unread from the Akita paper: A Sec. 3-4, 9, 11-13, App. A, B, rest of C, E, G.
+1. **Message-by-message leakage audit:** initial version in
+   `spec/aqt001_p0_audit.tex` (TR-TEG-2026-AQT-001). Partial: the report
+   records exactly which paper sections were read and which remain unread.
+2. **Security games G1–G3:** initial formalisation in TR-001; requires review
+   against the complete protocol and final construction.
+3. **Citation verification:** not complete. Every theorem and reduction used
+   in the commitment, masking, and QROM arguments must be checked against its
+   primary source.
+4. **Construction proposal:** `spec/aqt002_construction_plan.tex`
+   (TR-TEG-2026-AQT-002). This is a research plan, not a proved construction.
+5. **Independent review:** `spec/aqt002_independent_review.md` records the
+   blocking mathematical questions and the order for resolving them.
+6. **Executable local checks:** `research/test_box_rejection.py` checks the
+   finite-domain box-rejection identity; `research/test_ring_profile.py`
+   checks reference negacyclic arithmetic and root-of-unity compatibility.
+   Neither establishes transcript-level zero knowledge or cryptographic
+   security.
+7. **Ring architecture gate:** `spec/aqt003_ring_architecture_gate.md`
+   establishes that (q\equiv5\pmod8) is incompatible with a full
+   base-field negacyclic NTT at power-of-two degree (d\ge4). The exact
+   reference multiplication is now executable; the protocol modulus and
+   transform architecture remain unselected.
+
+## Akita sections still to read
+
+As recorded in TR-001/TR-002: A§3–4, A§9, A§11–13, Appendices A and B, the
+remaining portions of C, E, and G. Reconcile this list with the reports as
+each section is completed; do not claim the audit is complete prematurely.
+
+## Gate to P1
+
+Before implementing cryptographic primitives:
+
+- select one ring architecture (keep (q\equiv5\pmod8) without a full
+  NTT, change the modulus and re-prove challenge properties, or use a
+  separately specified CRT/extension strategy);
+- extract Akita's concrete schedule values ((q,d,n,m)) at every level;
+- specify the augmented commitment and fold vector layouts with dimensions;
+- finish the source reading and verify the concrete schedule catalogue;
+- complete the commitment, revealed-functional, and masked-sum-check definitions;
+- define the full rejection/retry transcript and prove its joint distribution;
+- produce a reviewed simulator proof and parameter inequalities, or mark the
+  relevant construction as unresolved and choose a different design.
+
+The first Rust crate should begin with exact reference arithmetic. An NTT is
+permitted only for parameter sets whose required root-of-unity conditions
+are verified. Do not couple correctness to an assumed transform.
+
+## Status snapshot — 2026-11-25
+
+- TR-001 and TR-002 are committed.
+- The local box-rejection identity passed 785 exhaustive fixed-witness
+  distribution cases, together with the Bernoulli lower-bound and
+  (Y=2NB) acceptance checks.
+- Exact reference negacyclic multiplication and an NTT root checker are now
+  present, with CI tests.
+- No Rust crates or cryptographic implementation exist yet.
+- No zero-knowledge or QROM security claim is established for aQiten.
