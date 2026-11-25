@@ -23,4 +23,4 @@ jobs:
         with:
           python-version: "3.12"
       - name: Run exhaustive mathematical checks
-        run: python -m unittest research.test_box_rejection -v
+        run: python -m unittest research.test_box_rejection research.test_ring_profile -v
