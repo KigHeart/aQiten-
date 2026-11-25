@@ -1,4 +1,4 @@
-name: Research checks
+name: Research unit checks
 
 on:
   push:
@@ -12,8 +12,8 @@ permissions:
   contents: read
 
 jobs:
-  box-rejection:
-    name: Box-rejection finite-domain checks
+  research-unit-tests:
+    name: Mathematical reference checks
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
