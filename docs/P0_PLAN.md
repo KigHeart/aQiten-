@@ -20,3 +20,9 @@ Gate: P1 does not start until (1)-(3) are reviewed.
 `spec/aqt001_p0_audit.tex` (TR-TEG-2026-AQT-001, Rev. 1.0) delivers items 1 and 2 for the sections
 of the paper read so far, and lists exactly what is still unread (see its Sec. 1) and the P1 gate.
 Item 3 (citation table) is not done: literature claims for the QROM track are unverified.
+
+## Update (2026-11-25, later)
+`spec/aqt002_construction_plan.tex` (TR-TEG-2026-AQT-002) gives the construction plan: principles D1-D6,
+masked fold (box rejection, committed mask, extraction lemma), revealed-functional lemma (open for structured
+weights, item Z3), masked sum-check, parameter inequalities I1-I6, crate plan, QROM routes Q1-Q3, milestones.
+Still unread from the Akita paper: A Sec. 3-4, 9, 11-13, App. A, B, rest of C, E, G.

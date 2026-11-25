@@ -1,0 +1,394 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------------------
+% Tilil Engineering Group technical-report house style
+% ---------------------------------------------------------------------------
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage[english]{babel}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit,calc,trees}
+\usepackage[most]{tcolorbox}
+\usepackage[colorlinks=true,linkcolor=tililblue,citecolor=tililblue,urlcolor=tililblue,linktoc=all]{hyperref}
+
+\geometry{letterpaper,margin=1in,headheight=14pt}
+
+\definecolor{tililblue}{RGB}{28,57,187}      % royal blue
+\definecolor{tililblue2}{RGB}{65,105,225}
+\definecolor{tililblue3}{RGB}{44,88,224}
+\definecolor{estgreen}{RGB}{34,139,34}
+\definecolor{estbg}{RGB}{226,244,226}
+\definecolor{conjyellow}{RGB}{204,153,0}
+\definecolor{conjbg}{RGB}{255,246,204}
+\definecolor{openred}{RGB}{190,30,45}
+\definecolor{openbg}{RGB}{252,226,228}
+\definecolor{wdgray}{RGB}{110,110,110}
+\definecolor{lightgray}{RGB}{245,245,245}
+\definecolor{bordergray}{RGB}{170,170,170}
+
+\newcommand{\epitag}[3]{\colorbox{#2}{\textcolor{#1}{\textsc{\footnotesize\bfseries #3}}}}
+\newcommand{\established}{\epitag{estgreen}{estbg}{established}}
+\newcommand{\conjectureTag}{\epitag{conjyellow}{conjbg}{conjecture}}
+\newcommand{\openproblem}{\epitag{openred}{openbg}{open problem}}
+\newcommand{\withdrawn}{\epitag{wdgray}{lightgray}{withdrawn}}
+
+\renewcommand{\_}{\textunderscore\allowbreak{}}
+\newcommand{\code}[1]{\texttt{\small #1}}
+\newcommand{\ev}[1]{\par\smallskip\noindent{\footnotesize\textcolor{tililblue}{\textbf{Sources:}} #1\par}}
+
+\newcommand{\Zq}{\mathbb{Z}_q}
+\newcommand{\F}{\mathbb{F}_p}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\negl}{\mathsf{negl}}
+\newcommand{\Adv}{\mathsf{Adv}}
+\newcommand{\pk}{\mathsf{pk}}
+\newcommand{\sk}{\mathsf{sk}}
+\newcommand{\nf}{\mathsf{nf}}
+\newcommand{\cm}{\mathsf{cm}}
+\newcommand{\ctx}{\mathsf{ctx}}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}[definition]{Proposition}
+\newtheorem{claim}[definition]{Claim}
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{example}[definition]{Example}
+\newtheorem{remark}[definition]{Remark}
+
+\newtcolorbox{verdict}[1][]{colback=tililblue!5,colframe=tililblue,fonttitle=\bfseries,#1}
+\newtcolorbox{findingbox}[1][]{colback=openbg,colframe=openred,fonttitle=\bfseries,#1}
+\newtcolorbox{goodbox}[1][]{colback=estbg,colframe=estgreen,fonttitle=\bfseries,#1}
+\newtcolorbox{decisionbox}[1][]{colback=conjbg,colframe=conjyellow,fonttitle=\bfseries,#1}
+
+\lstdefinelanguage{Rust}{
+  keywords={as,break,const,continue,crate,else,enum,extern,false,fn,for,if,impl,in,let,loop,match,mod,move,mut,pub,ref,return,self,Self,static,struct,super,trait,true,type,unsafe,use,where,while,dyn},
+  keywordstyle=\color{tililblue}\bfseries,
+  comment=[l]{//},commentstyle=\color{gray}\itshape,
+  string=[b]",stringstyle=\color{estgreen},
+  morecomment=[s]{/*}{*/}
+}
+\lstset{
+  language=Rust,basicstyle=\ttfamily\footnotesize,numbers=left,numberstyle=\tiny\color{gray},
+  numbersep=8pt,frame=single,rulecolor=\color{bordergray},backgroundcolor=\color{lightgray},
+  breaklines=true,columns=fullflexible,keepspaces=true,showstringspaces=false,captionpos=b,
+  xleftmargin=1em,xrightmargin=1em
+}
+
+% ---------------------------------------------------------------------------
+% Tilil symbol: an ankh whose loop is a flower teardrop and whose shaft is a dagger.
+% Drawn in the current colour; the title page puts it white on royal blue.
+% ---------------------------------------------------------------------------
+\newcommand{\tililsymbol}[1][1]{%
+\begin{tikzpicture}[scale=#1,line cap=round,line join=round]
+  % teardrop loop (flower bud), point at the top
+  \draw[line width=1.6pt] (0,1.15) .. controls (-0.62,0.62) and (-0.52,0.12) .. (0,0.10)
+                                   .. controls (0.52,0.12) and (0.62,0.62) .. (0,1.15);
+  % crossbar of the ankh = the dagger's crossguard
+  \draw[line width=1.6pt] (-0.55,0.0) -- (0.55,0.0);
+  % dagger blade (filled), tip pointing down
+  \fill (-0.11,0.0) -- (0.11,0.0) -- (0.11,-0.85) -- (0,-1.15) -- (-0.11,-0.85) -- cycle;
+  % pommel/grip hint just under the loop
+  \fill (0,0.10) circle (0.05);
+\end{tikzpicture}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small TR-TEG-2026-AQT-002}
+\fancyhead[R]{\small aQiten: Mathematical Construction Plan}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\title{aQiten}
+\date{}
+
+\begin{document}
+\sloppy
+
+% ===========================================================================
+% TITLE PAGE
+% ===========================================================================
+\begin{titlepage}
+\thispagestyle{empty}
+\noindent
+\begin{tikzpicture}[remember picture,overlay]
+  \fill[tililblue] (current page.north west) rectangle ([yshift=-3.6in]current page.north east);
+  \shade[left color=tililblue,right color=tililblue3,opacity=0.85]
+        (current page.north west) rectangle ([yshift=-3.6in]current page.north east);
+  \node[white,anchor=center] at ([xshift=2.0in,yshift=-1.75in]current page.north west)
+        {\scalebox{2.6}{\color{white}\tililsymbol[1]}};
+  \node[white,anchor=west,align=left] at ([xshift=3.05in,yshift=-1.45in]current page.north west)
+        {{\fontsize{44}{48}\selectfont\bfseries\textdagger\textexclamdown L!L}\\[2pt]
+         {\Large Tilil Engineering Group}\\[1pt]
+         {\normalsize\itshape Kapsabet}};
+\end{tikzpicture}
+
+\vspace*{3.35in}
+\begin{center}
+{\Huge\bfseries aQiten}\\[0.7em]
+{\Large Mathematical Construction Plan:\\[0.2em]
+Zero Knowledge and a Quantum-Random-Oracle Argument for a Lattice PCS}\\[0.9em]
+{\normalsize\itshape Revision 1.0 --- follows TR-TEG-2026-AQT-001 (P0 audit)}
+
+\vspace{0.55in}
+{\large Technical Report TR-TEG-2026-AQT-002}
+
+\vspace{0.7em}
+{\large Kiprop arap Yego}
+
+\vspace{0.7em}
+25 November 2026
+\end{center}
+\end{titlepage}
+
+\newpage
+\begin{center}\textbf{Abstract}\end{center}
+\noindent
+This report turns the P0 audit of Akita (TR-TEG-2026-AQT-001) into a construction plan for aQiten: an independent lattice
+polynomial-commitment framework that is zero-knowledge and has a quantum-random-oracle (QROM) security argument.
+It fixes six design principles; states, for each crate, the mathematics it must implement, with the lemmas that carry the security argument and the exact proof obligations that remain; gives the parameter inequalities that must hold jointly (binding, hiding, masking, no wrap-around); separates a tractable classical-ROM zero-knowledge programme from an open QROM programme; and attaches to each milestone an executable acceptance test.
+Two results are new relative to the earlier sketch: a \emph{box-rejection} response masking that is perfectly simulatable (no extra bits of flooding), and a \emph{revealed-functional} lemma that reduces zero knowledge of the whole transcript to a leftover-hash statement about the weights the verifier chooses. Neither is yet proved for the structured weights Akita uses; both are tagged accordingly.
+
+\tableofcontents
+\newpage
+
+\section{Status, Reading Record, Corrections}
+\textbf{Newly read for this report} (in addition to TR-TEG-2026-AQT-001): A\S6 (digit-range and Euclidean norm checks), A\S7.3--7.4 (quotient-free ring check and the fused sum-check), A\S10.1--10.2 (the extraction tree, Theorems 10.29 and 10.31), Appendix~E.5 (grinding), Appendix~G.1 (response bounds), Appendix~D.1 (challenge-set certificate).
+\textbf{Still not read line by line:} A\S3--4 (formal algebra and commitments), A\S9 (offloading details), A\S11 (chunking), A\S12--13 (planner and evaluation details), Appendices A, B, parts of C, E, G.2--G.4. No Akita code was run. Nothing below depends on those parts; where a dependency is expected, it is stated.
+
+\begin{findingbox}[title={Visible correction to the earlier sketch}]
+The sketch of 25 Nov said ``flooding or rejection sampling'' for the response mask. Reading A\S10.2 and Appendix~E.5 shows two things. (i) Akita's grinding keeps all commitments fixed and varies a \emph{nonce} that re-derives the challenges, because retries must not change committed data; a masked response needs the opposite rule (fresh mask, fresh commitment on every retry; see \S\ref{sec:reject}). (ii) With a uniform \emph{box} mask, rejection sampling yields a perfectly simulatable response, so the $\approx\lambda$ extra norm bits that flooding costs are not needed. Both points change the design below.
+\end{findingbox}
+
+\section{Design Principles}
+\label{sec:principles}
+\begin{description}[leftmargin=1.2em,style=nextline]
+\item[D1 Commit before challenge.] Every mask is committed before any challenge that multiplies it. Appendix~F.1 of Akita shows what happens otherwise (a prover steers the residual into a challenge kernel). \established\ (the two published failures).
+\item[D2 Every revealed value carries a fresh mask.] Any value the verifier sees that is a function of the witness is a linear functional of a vector that includes independent masking coordinates with non-negligible weight (Lemma~\ref{lem:revealed}). No unmasked witness-dependent message exists.
+\item[D3 Retry means restart.] A rejected response is discarded together with its mask, its mask commitment and the challenges derived from them (Lemma~\ref{lem:box}). Nonces may not search over challenges with a fixed mask.
+\item[D4 Mask norms are priced.] The mask's size enters the Module-SIS collision radius of every matrix it passes through. A parameter set is admissible only if binding and hiding hold \emph{together} (\S\ref{sec:params}). H1 of TR-TEG-2026-QLB-006 is the standing example of failing this.
+\item[D5 One acceptance rule, no partial mode.] There is no configuration that masks some messages and not others; the hidden verifier is one function. Tests compare transparent and hidden statements.
+\item[D6 Transcript built for quantum extraction.] Commit-then-challenge structure, domain-separated per-coordinate oracle queries and a bounded, explicitly counted round list, so that a QROM argument has a place to attach (\S\ref{sec:qrom}).
+\end{description}
+
+\section{Notation}
+$R_q=\mathbb{F}_q[X]/(X^d+1)$; $\mathcal{B}_b=\{-b/2,\dots,b/2-1\}$ the balanced alphabet; $\mathcal{C}$ the challenge family with invertible differences and certified operator-norm threshold $T$ (Akita D.1: $\rho(c)=\max_k|c(\zeta_k)|\le T$ checked by an integer predicate with enclosure error bounds); $\kappa_1\ge\|c\|_1$.
+A source block is $s_i\in R_q^{m}$ with $\|s_i\|_\infty\le\sigma$; the honest folded response is $z=\sum_ic_is_i$ with $\|z\|_\infty\le B_z$ (deterministic: $B_z\le G\cdot\kappa_1\sigma$, A\S G.1; typically much smaller with high probability, Lemma G.1). $N$ is the number of coordinates of $z$ ($N=m_Ad_A$, A\S6.2).
+$\mathsf{MSIS}(n,m,\eta)$ and $\mathsf{MLWE}(n,m,\chi)$ denote the standard Module problems; $\lambda$ is the security parameter.
+
+\section{The Masked Fold}
+\label{sec:fold}
+This is the centre of the plan: it fixes the modulus and norm bounds on which every other module depends.
+
+\subsection{Hiding commitments with randomness in the source}
+\begin{definition}[Hiding inner commitment]
+Let $A=[A_1\mid A_2]$ with $A_1\in R_q^{n\times m}$ uniform and $A_2=[I_n\mid A_2']$, $A_2'\in R_q^{n\times k}$ uniform. Commit to digits $s$ with randomness $r=(r_1,r_2)$ of norm $\le\sigma_r$:
+$t = A_1 s + r_1 + A_2' r_2$.
+\end{definition}
+\textbf{Binding.} A collision gives a short kernel vector of $[A_1\mid I_n\mid A_2']$, an $\mathsf{MSIS}(n,m+n+k,\eta)$ solution. \established\ (BDLOP structure).
+\textbf{Hiding.} $A_2' r_2+r_1$ is an $\mathsf{MLWE}$ sample (secret $r_2$, error $r_1$), so $t$ is computationally uniform. \established\ (BDLOP structure; parameter instantiation is P1).
+Treat the pair $\tilde s=(s,r)$ as the source vector and $\tilde A=[A_1\mid I\mid A_2']$ as the matrix: every Akita equation then holds verbatim with $\tilde s$ in place of $s$ and the collision radius sized for $\tilde A$. This is the least invasive change: A, B, D, F and H each get randomness columns of the same form, so the later folds and the terminal are unchanged algebraically. \conjectureTag\ \textit{How it fails:} the compression maps F, H rely on $\{-1,0\}$ digits to keep the collision bound at one (A\S4.5); adding randomness columns of larger norm could raise it and force rank increases, which must be measured.
+
+\subsection{Masked response and extraction}
+In a fold, before any challenge, the prover samples $y\in\mathbb{Z}^N$ uniformly from the box $[-Y,Y]^N$ (and its randomness part), commits $t_y=\tilde A\,\tilde y$, and absorbs $t_y$. After the challenges $(c_i)$ it forms
+\[
+ z'=\sum_i c_is_i+y,\qquad \text{and checks}\qquad \tilde A z' = \sum_i c_i t_i + t_y .
+\]
+\begin{lemma}[Extraction survives the mask]
+\label{lem:extract}
+Take two accepting transcripts that agree up to the challenge $c_i$ and differ only in it (all else, including $t_y$ and the partials, equal). Then $\Delta z'=\Delta c_i\,s_i$ exactly as in the unmasked fold.
+\end{lemma}
+\begin{proof}
+$y$ is fixed by $t_y$ (binding of $\tilde A$ up to an MSIS collision) before the challenge, so it cancels in $z'_1-z'_2$. The rest is Akita's argument (A\S10, Lemma 10.13). \qed
+\end{proof}
+\established\ (given D1; the extraction tree of A\S10.2 is unchanged). Consequence: the extractor never needs $y$; masks cost nothing in soundness structure and only enter the collision norm, $\|\Delta z'\|_\infty\le2(Y-B_z)$ at the verifier's check, instead of $2B_z$.
+
+\subsection{Box rejection: a perfectly simulatable response}
+\label{sec:reject}
+\begin{lemma}[Box rejection]
+\label{lem:box}
+Fix $z\in\mathbb{Z}^N$ with $\|z\|_\infty\le B$. Let $y\leftarrow[-Y,Y]^N$ be uniform and let the prover output $z'=y+z$ only if $\|z'\|_\infty\le Y-B$ (otherwise it discards everything and restarts with fresh $y$). Then the output $z'$ is uniform on $[-(Y-B),\,Y-B]^N$, independent of $z$, and the acceptance probability is $\big(\tfrac{2(Y-B)+1}{2Y+1}\big)^N\ \ge\ 1-\tfrac{2NB}{2Y+1}$.
+\end{lemma}
+\begin{proof}
+For $u\in[-(Y-B),Y-B]^N$ there is exactly one $y=u-z\in[-Y,Y]^N$, so $\Pr[z'=u\wedge\text{accept}]=(2Y+1)^{-N}$, independent of $z$. Summing over $u$ gives the acceptance probability and uniformity of the conditional distribution. The inequality is Bernoulli. \qed
+\end{proof}
+\established\ (elementary, exact). Choosing $Y=2NB$ gives acceptance $\ge1/2$ (Bernoulli), so at most $2$ expected tries (the exact value is about $e^{-1/2}$). Flooding without rejection has statistical distance $\le NB/(2Y+1)$ and therefore needs $Y\approx NB\,2^{\lambda}$.
+\textbf{Why retries restart everything.} If a rejected attempt were retried with the \emph{same} $y$ and a new nonce, the pair (attempt count, acceptance event) would be a function of $y+z(c)$ and would leak; Lemma~\ref{lem:box} holds only when each attempt draws an independent $y$. This is the opposite of Akita's present grinding rule, and it changes how $Q$ is counted in the soundness ledger (every restart adds oracle queries).
+
+\subsection{Everything else the verifier sees: the revealed-functional lemma}
+Not only $z'$ is revealed. The terminal reveals partials $e_i=\langle a,f_i\rangle$; sum-check round polynomials and final claims are functions of the witness; the successor commitment hides by \S4.1 but later folds open linear functionals of it.
+\begin{lemma}[Revealed functionals are uniform given a masking block]
+\label{lem:revealed}
+Let $w=(w_0,\mu)$ where $\mu\in\mathcal{M}^{n_\mu}$ is an independent masking vector with min-entropy $H_\infty(\mu)$, and let the $k$ revealed field-valued functionals act on $\mu$ through a matrix $\Lambda\in\mathbb{F}_q^{k\times n_\mu}$ chosen by the verifier independently of $\mu$. Suppose that for all $\mu\ne\mu'$ in the support, $\Pr_\Lambda[\Lambda\mu=\Lambda\mu']\le(1+\gamma)q^{-k}$. If $H_\infty(\mu)\ge k\log_2q+2\log_2(1/\varepsilon)$ then $\Lambda\mu$ is within statistical distance $\tfrac12\sqrt{\gamma+\varepsilon^2}$ of uniform on $\mathbb{F}_q^k$, and so $L_0w_0+\Lambda\mu$ is that close to uniform and independent of $w_0$.
+\end{lemma}
+\begin{proof}[Proof sketch]
+The leftover-hash lemma for an almost-universal family: the collision probability of $(\Lambda,\Lambda\mu)$ is at most $2^{-H_\infty}+(1+\gamma)q^{-k}$, and the distance to uniform is at most $\tfrac12\sqrt{q^k\cdot\mathrm{coll}-1}$. Independence from $w_0$: the term $L_0w_0$ is a fixed translation of an almost-uniform value. \qed
+\end{proof}
+\established\ for families with a stated $\gamma$. \conjectureTag\ \textit{How it fails (and the open work):} Akita's weights are \emph{structured} (equality polynomials $\widetilde{eq}(r,\cdot)$, tensor weights, gadget powers), not independent uniform matrices. The Schwartz--Zippel bound gives only $\Pr_r[\widetilde\delta(r)=0]\le\ell/q$ for a single functional, i.e.\ $\gamma\approx\ell-1$, which makes the bound above \emph{vacuous}. The true requirement is on the \emph{average} over pairs $(\mu,\mu')$ drawn from a high-entropy distribution: only a small set of difference vectors $\delta$ have an excess zero fraction (e.g.\ $\widetilde\delta=\prod_ir_i$), and a high-entropy $\mu$ puts little mass on them. Proving that, jointly for $k$ functionals and across levels that share one witness, is work item~Z3. If it fails, the fallback is to add verifier-chosen \emph{uniform} weight rows (cost: a few extra field elements per level).
+\textbf{Design consequence (the block rule).} Every block of every witness vector carries $\ge n_\mu$ masking coordinates with $n_\mu\log_2|\mathcal{M}|\ge k_{\mathrm{rev}}\log_2q+2\lambda$, where $k_{\mathrm{rev}}$ is the number of field-valued functionals revealed involving that block. With balanced digits of base $b$ this is $n_\mu\ge(k_{\mathrm{rev}}\log_2q+2\lambda)/\log_2b$, i.e.\ for $q\approx2^{32}$, $b=8$, $k_{\mathrm{rev}}=4$, $\lambda=128$: $n_\mu\ge(128+256)/3=128$ extra digits per block. \conjectureTag\ (the arithmetic is exact; the premises are Z3). It also bounds how many openings the protocol may reveal per block, the same discipline as the trace-height rule in zero-knowledge STARKs.
+
+\subsection{Zero-knowledge sum-check}
+\begin{lemma}[Masked sum-check rounds]
+\label{lem:zksc}
+Let $g$ be a $\mu'$-variate polynomial of degree $\le D$ in each variable, with claim $\sum_{x\in\{0,1\}^{\mu'}}g(x)=H$. Sample $m(X)=\sum_{j=1}^{\mu'}m_j(X_j)$ with each $m_j$ uniform of degree $\le D$, send $H_m=\sum_xm(x)$ (committed), then draw $\rho\ne0$ and run sum-check on $g+\rho m$ with claim $H+\rho H_m$. Each round message $s_j(X)=\sigma_j(X)+\rho\,(m_j(X)+\text{const})$ is uniform on the affine space $\{s:s(0)+s(1)=\text{claim}_j\}$, independently of $g$.
+\end{lemma}
+\begin{proof}
+$m_j$ is uniform and independent of everything before round $j$, $\rho\ne0$ is a unit, and the verifier's challenges are independent of $m_j$ until after $s_j$ is sent. So $\rho m_j$ is a uniform polynomial of degree $\le D$; adding the fixed $\sigma_j$ gives a uniform polynomial subject to the single linear constraint fixed by the previous round. \qed
+\end{proof}
+\established\ (the round messages; Libra/Chiesa--Forbes--Gur--Spooner structure). The \emph{final} claim $(g+\rho m)(r)$ still reveals one functional of the witness per sum-check; it is covered by the block rule (Lemma~\ref{lem:revealed}) because the claim is on a masked witness polynomial, and the extra mask $m$ is opened in the clear at $r$ (it has $O(\mu'D)$ coefficients). \conjectureTag\ for the fused sum-check of A\S7.4 specifically: the ring-relation term $\widetilde w\,m_{\tau_1}$ and the range term $\widetilde w(\widetilde w+1)$ are of degree up to $3$, and masking the cubic range term needs masks of degree $3$, not $1$; the composed masked fused sum-check is item~Z4.
+
+\subsection{Simulator, composed}
+\begin{theorem}[Target statement, classical ROM]
+\label{thm:zk}
+Assume $\mathsf{MLWE}$ for the commitment parameters, Lemma~\ref{lem:box} for each fold's response, Lemma~\ref{lem:revealed} for every revealed functional, and Lemma~\ref{lem:zksc} for every sum-check. Then there is a simulator $\mathcal{S}$ that, given $(x,y=f(x))$ and programming the random oracle, outputs a transcript whose distance from the real one is at most
+\[
+ \varepsilon_{\mathrm{zk}}\ \le\ \sum_{\text{levels }h}\Big(\mathrm{Adv}^{\mathsf{MLWE}}_{h}+\varepsilon^{\mathrm{LHL}}_{h}\Big)\ +\ \varepsilon_{\mathrm{ord}}\ ,
+\]
+the sum over levels of the commitment-hiding and masking terms (response rejection contributes $0$ by Lemma~\ref{lem:box}), plus $\varepsilon_{\mathrm{ord}}$ for the programming collisions.
+\end{theorem}
+\textbf{Simulation outline.} For each level, sample the challenges, then a uniform $z'$ in the box, then define the mask commitment $t_y:=\tilde Az'-\sum_ic_it_i$; commitments $t_i$ are replaced by commitments to $0$ (Hybrid via MLWE); sum-check messages are sampled uniform under their constraint (Lemma~\ref{lem:zksc}); clear terminal values are sampled from the masked uniform distributions (Lemma~\ref{lem:revealed}). Programming the oracle at the challenge, after $t_y$ is defined, is the standard ROM step; $t_y$ has high min-entropy because $z'$ does.
+\conjectureTag\ \textit{How it fails:} the proof is a hybrid argument over the recursion; the claim that the hybrids compose to $\sum$ above (and not a product or a worse term) must be written out; the weak link is Z3/Z4. \openproblem\ until written and reviewed.
+
+\section{Parameter Inequalities}
+\label{sec:params}
+These must hold simultaneously at every level. They are the coupling that was missing from the TR-005/QLB commitment (where binding held and hiding failed).
+\begin{enumerate}[leftmargin=1.6em,label=\textbf{I\arabic*.}]
+\item \textbf{Binding.} $\mathsf{MSIS}(n,\,m+n+k,\,\eta)$ is $\ge2^{128}$ under quantum ADPS16 Core-SVP with LGSA basis shape, where $\eta\ge2(Y-B_z)\kappa_1^{\mathrm{ext}}$-type collision bound from Lemma~\ref{lem:extract} and Akita's (190) bookkeeping; family-wide union per (294).
+\item \textbf{Hiding.} $\mathsf{MLWE}(k,n,\chi_{\sigma_r})$ is $\ge2^{128}$ against primal-uSVP and dual attacks, \emph{and} the lattice-reduction regression (\code{hiding\_lll\_attack.py}-style) fails at the chosen parameters. Quantum ADPS16 for the LWE side as the stated model; any other model is reported next to it.
+\item \textbf{No wrap-around.} $q>2\max\{2Y,\,U_{\mathrm{dir}},\,S_{\max}\}$ (Akita's direct-norm condition (115) with the masked bounds), so that integer relations lift to $\mathbb{F}_q$.
+\item \textbf{Rejection.} $Y\ge2NB_z$ (acceptance $\ge1/2$ by Lemma~\ref{lem:box}); each restart costs one fold's prover work, so expected overhead $\le2\times$.
+\item \textbf{Masking entropy.} Block rule of \S\ref{sec:fold}: $n_\mu\log_2b\ge k_{\mathrm{rev}}\log_2q+2\lambda$.
+\item \textbf{Challenge set.} $q\equiv5\pmod 8$ prime (split $s_{\mathrm{split}}=2$) or the splitting needed by the chosen invertibility bound $\|c\|_\infty<q^{1/s}/\sqrt s$; operator-norm threshold $T$ certified by the integer predicate of Akita D.1; $|\mathcal{C}^{\mathrm{acc}}|$ large enough for the coordinate-wise special-soundness ledger $\mu\ell(k-1)/|\mathcal{X}|$.
+\end{enumerate}
+\textbf{Illustration (hypothetical numbers, not Akita's).} If $N=2^{16}$ and $B_z=2^{8}$ then $Y=2^{25}$ and I3 needs $q\gtrsim2^{27}$: a 32-bit field may suffice under rejection, where flooding to $2^{-128}$ would need $Y\approx2^{24+128}$ and cannot. This is the main quantitative reason to prefer I4. \conjectureTag\ \textit{How it fails:} real $N$, $B_z$ and the extra rank forced by I1--I2 decide it; P1 computes them from Akita's schedule catalogue.
+
+\section{Crate Plan (one crate at a time, each complete and runnable)}
+\label{sec:crates}
+\begin{center}
+\small\renewcommand{\arraystretch}{1.18}
+\begin{longtable}{@{}p{0.06\textwidth}p{0.17\textwidth}p{0.42\textwidth}p{0.24\textwidth}@{}}
+\toprule
+\textbf{\#} & \textbf{Crate} & \textbf{Mathematics implemented} & \textbf{Acceptance test}\\
+\midrule
+\endhead
+1 & \code{aqiten-ring} & Prime-field arithmetic ($q\equiv5\bmod8$), $R_q$ negacyclic arithmetic, NTT with exact lifting, balanced digit (de)composition, integer-norm accounting & Property tests against a slow reference; round-trip digits; known-answer vectors cross-checked in Python\\
+2 & \code{aqiten-estimator} & MSIS and MLWE cost estimation (quantum ADPS16 plus classical models), basis-shape models, family union bound (294) & Reproduces Akita's published instances within stated tolerance; reports which model is used\\
+3 & \code{aqiten-params} & Solves I1--I6 for a target schedule; emits a parameter certificate and an independent validator & Validator accepts only certificates that re-derive; adversarial parameter sets are rejected\\
+4 & \code{aqiten-commit} & Hiding two-tier commitment of \S4.1 with opening and weak-opening checks & Binding: MSIS-collision harness; hiding: LLL/BDD attack harness must fail at certified parameters and must succeed on a deliberately weakened set\\
+5 & \code{aqiten-transcript} & Domain-separated, coordinate-indexed oracle queries, explicit round ledger and query counter & Replay tests; reordered-message and challenge-before-commit negative tests\\
+6 & \code{aqiten-sumcheck} & Masked sum-check (Lemma~\ref{lem:zksc}), degree up to $3$, fused with range and relation rows & Round-message distribution test (statistical) and soundness negative tests\\
+7 & \code{aqiten-fold} & Masked fold: box rejection (Lemma~\ref{lem:box}), mask commitments, extraction harness & Extractor recovers weak openings; distribution of $z'$ independent of witness by test\\
+8 & \code{aqiten-pcs} & Schedule, recursion, terminal, offloading, one acceptance rule & End-to-end opening; transparent-vs-hidden comparison; no partial-mode configuration exists\\
+9 & \code{aqiten-sim} & The simulator of Thm.~\ref{thm:zk} and the witness-extraction harness & Real vs.\ simulated views are distinguishable only with the negligible advantage proven; fails on a deliberately unmasked variant\\
+10 & \code{aqiten-bench} & Sizes, times, security-bit report & Reproducible tables; differential check against Akita's transparent mode on identical inputs\\
+\bottomrule
+\end{longtable}
+\end{center}
+\established\ (the plan's structure; each crate depends only on earlier ones).
+
+\section{QROM Programme}
+\label{sec:qrom}
+\subsection{What Akita's argument gives, and what is missing}
+Akita proves: for every classical oracle adversary with $Q$ queries, an extractor that, via a transcript tree of size $\mathrm{Tree}(\mathrm{sch})=\prod_{r\in\mathrm{Rounds}(\mathrm{sch})}\big(1+\sum_{u\in U_r}(k_{r,u}-1)\big)$, returns a witness or an MSIS collision, with failure at most $(Q+1)\varepsilon_{\mathrm{int}}(\mathrm{sch})+\Delta_{\mathrm{setup}}+\sum_I\mathrm{Adv}^{\mathsf{MSIS}}_I$ (A\S10.2, Thm.~10.31, eq.~(224)). \established\ (read).
+The classical step is the forking/tree-building extractor. It is not available to a quantum adversary: it cannot rewind, and it queries $\mathcal{H}$ in superposition. The paper states this plainly.
+
+\subsection{Three routes}
+\begin{center}
+\small\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}p{0.06\textwidth}p{0.36\textwidth}p{0.26\textwidth}p{0.22\textwidth}@{}}
+\toprule
+\textbf{Route} & \textbf{Idea} & \textbf{Needs} & \textbf{Status}\\
+\midrule
+Q1 & Treat the protocol as an IOP-like object and use state-restoration soundness with a QROM compiler; binding of lattice maps used through collapsing & Collapse-binding of the maps $A,B,D,F,H$ from MSIS/MLWE; state-restoration soundness of the schedule & \openproblem\\
+Q2 & Quantum extraction for multi-round coordinate-wise special-sound protocols by measure-and-reprogram or online extraction & A bound whose loss is polynomial, not exponential, in $|\mathrm{Rounds}|$ & \openproblem; loss in known generic results grows with the number of rounds\\
+Q3 & Round reduction: fewer, larger rounds (bigger $\mathcal{C}$, fewer folds, fewer sum-check variables per round) so that Q2 is usable & Re-optimised schedules; measured $|\mathrm{Rounds}|$ and $\mathrm{Tree}$ & \conjectureTag\\
+Fallback & Verify the Akita-ZK proof inside a hash-based proof with a published QROM argument & Verifier circuit small enough for the outer system & Possible; not an extension of the scheme itself\\
+\bottomrule
+\end{tabular}
+\end{center}
+\textbf{First concrete measurement (no theory needed).} From Akita's schedule catalogue, compute $|\mathrm{Rounds}(\mathrm{sch})|$, $\mathrm{Tree}(\mathrm{sch})$ and the per-round degrees for the shipped schedules at $N=2^{22},2^{26},2^{30}$. Every QROM route's loss depends on these numbers; they are readable from the planner without running a proof.
+
+\subsection{Obligations (to be filled only from verified sources)}
+\begin{enumerate}[leftmargin=1.6em,label=\textbf{Q\arabic*.}]
+\item Verify, against the original papers, the statements used for multi-round Fiat--Shamir in the QROM, online extractability, state-restoration soundness with collapsing commitments, and adaptive reprogramming for zero-knowledge simulators. (None of them is cited as established in this report.)
+\item State collapse-binding for each commitment map and reduce it to MSIS (or find the correct assumption).
+\item Define the quantum analogue of $\mathrm{Tree}$ and prove its loss; or prove impossibility of the generic route and adopt Q3/Fallback.
+\item ZK in the QROM: the simulator of Thm.~\ref{thm:zk} programs the oracle at a point whose input has min-entropy from $z'$; the adaptive-reprogramming bound applies if the entropy suffices. \conjectureTag
+\end{enumerate}
+\openproblem\ overall. The programme is designed so that G3 in the classical ROM, which is within reach, can be delivered and used before G1 in the QROM is closed, with the gap stated openly.
+
+\section{Work Items and Milestones}
+\begin{center}
+\small\renewcommand{\arraystretch}{1.2}
+\begin{longtable}{@{}p{0.07\textwidth}p{0.40\textwidth}p{0.27\textwidth}p{0.15\textwidth}@{}}
+\toprule
+\textbf{Item} & \textbf{Task} & \textbf{Output} & \textbf{Estimate}\\
+\midrule
+\endhead
+Z1 & Read remaining sections (A\S3--4, 9, 11--13, App.\ A, B, rest of C, E, G); extract Akita's concrete schedule catalogue and instance list & Updated TR-001 reading record; table of $N,B_z,q,d,n,m$ per level & 1--2 wk\\
+Z2 & Crates 1--3 (ring, estimator, params) & Certified parameter sets under I1--I6 & 4--6 wk\\
+Z3 & Prove the joint revealed-functional bound for Akita's structured weights (equality, tensor, gadget) & Lemma with explicit $\varepsilon_{\mathrm{col}}$ & 4--8 wk\\
+Z4 & Masked fused sum-check of A\S7.4 (cubic range term, ring rows) & Lemma + crate 6 & 4--6 wk\\
+Z5 & Crates 4, 5, 7 (commit, transcript, fold) with harnesses & Masked fold passes extraction and distribution tests & 6--8 wk\\
+Z6 & Crate 8, composition theorem, hybrid proof (Thm.~\ref{thm:zk}) & Classical-ROM ZK PCS + proof & 6--8 wk\\
+Z7 & Crates 9, 10; benchmarks; external review & Report with measured sizes & 6 wk + review\\
+Q0 & Measure $|\mathrm{Rounds}|$, $\mathrm{Tree}$ for shipped schedules (no theory) & Table & 1 wk\\
+Q1--Q3 & Literature verification, collapse-binding, QROM route choice & TR + theorem or negative result & 16--40 wk, uncertain\\
+\bottomrule
+\end{longtable}
+\end{center}
+\conjectureTag\ (all estimates; critical path is Z2 $\to$ Z5 $\to$ Z6, about 20--28 weeks sequentially; Q runs in parallel).
+
+\section{Risks and Fallbacks}
+\begin{center}
+\small\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}p{0.30\textwidth}p{0.36\textwidth}p{0.24\textwidth}@{}}
+\toprule
+\textbf{Risk} & \textbf{Effect} & \textbf{Fallback}\\
+\midrule
+Binding and hiding cannot both hold at $q\approx2^{32}$ with rank within budget (I1--I2) & Larger field and larger proofs & 64-bit profile; reduce to a hiding commitment only at the root\\
+Z3 fails for the structured weights & Revealed values not provably uniform & Add explicit random-weight masking rows (verifier-chosen uniform matrix) at a cost in size\\
+Box rejection too costly at large $N$ ($Y\ge NB$) & Modulus too small & Chunked responses (A\S11) with per-chunk masks; or flooding where $N$ is small\\
+QROM route closed negatively & No G1 theorem & State the gap; adopt outer hash-based wrapper as the product's QROM story\\
+Akita ships its own ZK mode first & Duplication & Interoperability and independent review value; contact authors before Z5\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Epistemic Ledger}
+\begin{center}
+\small\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}p{0.09\textwidth}p{0.62\textwidth}p{0.18\textwidth}@{}}
+\toprule
+\textbf{Tag} & \textbf{Claim} & \textbf{Where}\\
+\midrule
+\established & Extraction survives a mask committed before the challenge (Lemma~\ref{lem:extract}); box rejection is perfectly simulatable (Lemma~\ref{lem:box}); masked sum-check round messages are uniform under their constraint (Lemma~\ref{lem:zksc}) & \S4\\
+\established & BDLOP-form commitment is binding under MSIS and hiding under MLWE (structure only) & \S4.1\\
+\conjectureTag & Revealed-functional lemma for Akita's structured weights (Z3); masked fused sum-check (Z4); hybrid composition (Thm.~\ref{thm:zk}); the numerical illustration; sufficiency of a 32-bit field & \S4, \S5\\
+\openproblem & QROM knowledge soundness; collapse-binding of the maps; ZK in the QROM; any claim about Akita's own roadmap plans & \S7\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Revision history}
+\begin{tabular}{@{}p{0.07\textwidth}p{0.14\textwidth}p{0.7\textwidth}@{}}
+\toprule
+\textbf{Rev.} & \textbf{Date} & \textbf{Change}\\
+\midrule
+1.0 & 2026-11-25 & Construction plan: principles D1--D6, masked fold, lemmas, parameter inequalities I1--I6, crate plan, QROM routes, milestones, risks.\\
+\bottomrule
+\end{tabular}
+
+\vfill
+\begin{center}\textit{Kiprop arap Yego}\end{center}
+\end{document}
