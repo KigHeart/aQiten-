@@ -1,91 +1,108 @@
-# aQiten product and engineering roadmap (rev. 0.1)
+# aQiten product and engineering roadmap (rev. 0.2)
 
 ## North star
 
-Build verifiable agentic infrastructure: autonomous agents coordinate bounded work; deterministic authority controls protected actions; cryptographic proofs establish specified computational claims; independent systems verify portable evidence.
+Build a verifiable agentic computation runtime: heterogeneous agents coordinate typed work; deterministic state and scheduling make execution recoverable; authority controls protected actions; formal computations establish narrow claims; independent systems verify portable evidence.
 
-## Stage 0 — research integrity and architecture
+## Stage 0 — research integrity and specification
 
-**Now.**
+- Complete Akita paper/source audit and independent construction review.
+- Resolve mathematical blockers and state security games precisely.
+- Maintain the competitive product landscape.
+- Finalize agentic system specification and compute lifecycle.
+- Define typed artifacts, BSP semantics, capability semantics and evidence schema.
+- Preserve cryptographic/runtime dependency separation.
 
-- Complete the Akita paper/source audit.
-- Resolve the open construction questions in the independent review.
-- Specify the full security games and simulator.
-- Define the agent threat model and capability semantics.
-- Preserve strict cryptographic/agent dependency separation.
-- No production claims or protected-data use.
+Exit: reviewed construction proposal, normative runtime contracts and threat model. No production claims or protected data.
 
-Exit: reviewed construction proposal, architecture contracts and threat model.
-
-## Stage 1 — cryptographic foundation
+## Stage 1 — cryptographic foundation (parallel research track)
 
 - error, codec, field and exact reference ring arithmetic;
 - estimator and parameter certificate validator;
 - transcript and challenge sampling;
 - commitment core/prover/verifier separation;
-- masked sum-check and folding only after mathematical proof obligations are resolved.
+- masked sum-check and folding only after mathematical obligations are resolved.
 
-Exit: complete, independently reviewable PCS/ZK construction and reference tests. A QROM target requires a QROM theorem; lattice assumptions alone are insufficient.
+Exit: complete, independently reviewable PCS/ZK construction and reference tests. QROM target requires a QROM theorem; lattice assumptions alone are insufficient.
 
-## Stage 2 — deterministic authority kernel
+## Stage 2 — deterministic runtime kernel
 
-Build before adding autonomous side effects:
-- agent/task identifiers and state machine;
-- authenticated capability format;
-- deterministic policy evaluation;
-- delegation attenuation;
-- replay protection, expiry, budgets and revocation;
-- effect gateway with mock tools;
-- adversarial tests for bypass, escalation and fail-open behaviour.
+- canonical IDs, task/result/artifact envelopes;
+- versioned state schemas, typed channels and reducer laws;
+- graph IR and deterministic graph validation;
+- frozen frontier, immutable node input and BSP barrier;
+- deterministic merge and content-addressed checkpoints;
+- schedule permutation simulator.
 
-Exit: a non-LLM test harness cannot exceed granted authority, and every protected mock action is mediated.
+Exit: same validated task results produce the same checkpoint regardless of completion order; incomplete/duplicate frontiers reject.
 
-## Stage 3 — proof-carrying computation
+## Stage 3 — durability and cost
 
-- formal relation registry and version identifiers;
-- deterministic computation interface;
-- prover/verifier SDK;
-- canonical proof envelope;
-- independent verification process;
-- evidence schema that distinguishes proof, signature, approval and execution record.
+- SQLite checkpoint/task/effect journal;
+- model-response journaling and idempotent run submission;
+- fork-with-edit and provenance;
+- budget reservation/reconciliation;
+- crash recovery, park/resume and single-process fencing.
 
-Exit: a separate process verifies a proof and rejects altered statements, profiles and encodings.
+Exit: crash matrix passes; committed state is not applied twice; uncertain effects are not blindly retried.
 
-## Stage 4 — agentic runtime
+## Stage 4 — deterministic authority kernel
 
-- durable task runtime and checkpoints;
-- planner/orchestrator interface;
-- specialist agents and bounded delegation;
-- tool interfaces routed through the effect gateway;
-- scoped memory and provenance;
-- LLM provider adapters and MCP adapter as optional edge packages.
+- principal/workload identity abstraction;
+- authenticated capabilities and delegation attenuation;
+- deterministic policy decision and receipts;
+- approval records, expiry and single-use consumption;
+- effect taxonomy and mandatory gateway;
+- mock tool adapters and adversarial bypass tests.
 
-Exit: one agentic workflow completes a synthetic task without direct tool bypass and with a verifiable evidence package.
+Exit: non-LLM test harness cannot exceed granted authority; every protected mock action is mediated.
 
-## Stage 5 — first vertical: private financial computation
+## Stage 5 — formal computation and proof integration
 
-Use QALABASH `R_spend` with synthetic data:
-- agent receives task and capability;
-- relation is selected from a reviewed registry;
-- computation and proof are generated;
-- independent verifier checks public statement;
-- policy gateway approves or rejects a mock settlement;
-- evidence package is exported and checked independently.
+- versioned relation registry;
+- deterministic evaluator and canonical statement;
+- stable prover/verifier interfaces;
+- independent verifier process and canonical proof envelope;
+- evidence graph and offline verification.
 
-Exit: false statements, unauthorised actions, replay and altered evidence are rejected.
+Exit: separate process rejects altered statements, relation versions, profiles and encodings. Experimental proof backend clearly labelled.
 
-## Stage 6 — production qualification
+## Stage 6 — agentic runtime and adapters
+
+- planner/orchestrator and typed fan-in policies;
+- specialist agents consuming other agents' artifacts;
+- challenge/critic and reconciliation nodes;
+- scoped memory/context admission;
+- one model provider, MCP and A2A adapters;
+- OpenTelemetry exporter and evaluation harness.
+
+Exit: agent workflow completes without tool bypass and produces inspectable provenance/evidence.
+
+## Stage 7 — first vertical
+
+Use synthetic QALABASH R_spend and mock settlement:
+- bounded agent tasks and capabilities;
+- typed data-preparation and policy-analysis artifacts;
+- deterministic relation evaluation;
+- proof generation and independent verification;
+- policy-gated mock settlement;
+- evidence export and offline verification.
+
+Exit: false statement, wrong relation, unauthorized action, replay and altered evidence are rejected.
+
+## Stage 8 — production qualification
 
 - external cryptographic review and implementation audit;
 - independent systems/security review;
 - reproducible builds and parameter provenance;
 - load, fault, recovery and denial-of-service testing;
-- memory, tenant isolation, data retention and key lifecycle reviews;
-- performance baselines against Akita/Jolt and relevant hash-based alternatives;
-- production operations, incident response and version policy.
+- tenant isolation, data retention and key lifecycle reviews;
+- multi-worker store and lease fencing;
+- performance baselines against Akita/Jolt, zkVMs and relevant hash-based alternatives;
+- operational incident response and version policy.
 
 Exit: explicit product security case and deployment-specific acceptance. Passing tests alone is not sufficient.
 
 ## Scope discipline
 
-Do not build a general-purpose agent framework, universal zkVM, arbitrary-code compiler, distributed prover cluster and enterprise dashboard simultaneously. Validate the cryptographic foundation and authority kernel first; then ship one end-to-end workflow.
+Do not build a universal agent framework, zkVM, arbitrary-code compiler, distributed prover cluster, browser automation suite and enterprise dashboard simultaneously. The first agentic milestone is the deterministic BSP kernel plus authority gateway—not a sophisticated LLM loop.
