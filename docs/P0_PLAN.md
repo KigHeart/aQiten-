@@ -15,3 +15,8 @@ Deliverables:
    digit base, masking strategy: flooding vs rejection).
 
 Gate: P1 does not start until (1)-(3) are reviewed.
+
+## Status (2026-11-25)
+`spec/aqt001_p0_audit.tex` (TR-TEG-2026-AQT-001, Rev. 1.0) delivers items 1 and 2 for the sections
+of the paper read so far, and lists exactly what is still unread (see its Sec. 1) and the P1 gate.
+Item 3 (citation table) is not done: literature claims for the QROM track are unverified.

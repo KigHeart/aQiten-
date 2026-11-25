@@ -1,0 +1,321 @@
+\documentclass[11pt]{article}
+
+% ---------------------------------------------------------------------------
+% Tilil Engineering Group technical-report house style
+% ---------------------------------------------------------------------------
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage[english]{babel}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit,calc,trees}
+\usepackage[most]{tcolorbox}
+\usepackage[colorlinks=true,linkcolor=tililblue,citecolor=tililblue,urlcolor=tililblue,linktoc=all]{hyperref}
+
+\geometry{letterpaper,margin=1in,headheight=14pt}
+
+\definecolor{tililblue}{RGB}{28,57,187}      % royal blue
+\definecolor{tililblue2}{RGB}{65,105,225}
+\definecolor{tililblue3}{RGB}{44,88,224}
+\definecolor{estgreen}{RGB}{34,139,34}
+\definecolor{estbg}{RGB}{226,244,226}
+\definecolor{conjyellow}{RGB}{204,153,0}
+\definecolor{conjbg}{RGB}{255,246,204}
+\definecolor{openred}{RGB}{190,30,45}
+\definecolor{openbg}{RGB}{252,226,228}
+\definecolor{wdgray}{RGB}{110,110,110}
+\definecolor{lightgray}{RGB}{245,245,245}
+\definecolor{bordergray}{RGB}{170,170,170}
+
+\newcommand{\epitag}[3]{\colorbox{#2}{\textcolor{#1}{\textsc{\footnotesize\bfseries #3}}}}
+\newcommand{\established}{\epitag{estgreen}{estbg}{established}}
+\newcommand{\conjectureTag}{\epitag{conjyellow}{conjbg}{conjecture}}
+\newcommand{\openproblem}{\epitag{openred}{openbg}{open problem}}
+\newcommand{\withdrawn}{\epitag{wdgray}{lightgray}{withdrawn}}
+
+\renewcommand{\_}{\textunderscore\allowbreak{}}
+\newcommand{\code}[1]{\texttt{\small #1}}
+\newcommand{\ev}[1]{\par\smallskip\noindent{\footnotesize\textcolor{tililblue}{\textbf{Sources:}} #1\par}}
+
+\newcommand{\Zq}{\mathbb{Z}_q}
+\newcommand{\F}{\mathbb{F}_p}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\negl}{\mathsf{negl}}
+\newcommand{\Adv}{\mathsf{Adv}}
+\newcommand{\pk}{\mathsf{pk}}
+\newcommand{\sk}{\mathsf{sk}}
+\newcommand{\nf}{\mathsf{nf}}
+\newcommand{\cm}{\mathsf{cm}}
+\newcommand{\ctx}{\mathsf{ctx}}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}[definition]{Proposition}
+\newtheorem{claim}[definition]{Claim}
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{example}[definition]{Example}
+\newtheorem{remark}[definition]{Remark}
+
+\newtcolorbox{verdict}[1][]{colback=tililblue!5,colframe=tililblue,fonttitle=\bfseries,#1}
+\newtcolorbox{findingbox}[1][]{colback=openbg,colframe=openred,fonttitle=\bfseries,#1}
+\newtcolorbox{goodbox}[1][]{colback=estbg,colframe=estgreen,fonttitle=\bfseries,#1}
+\newtcolorbox{decisionbox}[1][]{colback=conjbg,colframe=conjyellow,fonttitle=\bfseries,#1}
+
+\lstdefinelanguage{Rust}{
+  keywords={as,break,const,continue,crate,else,enum,extern,false,fn,for,if,impl,in,let,loop,match,mod,move,mut,pub,ref,return,self,Self,static,struct,super,trait,true,type,unsafe,use,where,while,dyn},
+  keywordstyle=\color{tililblue}\bfseries,
+  comment=[l]{//},commentstyle=\color{gray}\itshape,
+  string=[b]",stringstyle=\color{estgreen},
+  morecomment=[s]{/*}{*/}
+}
+\lstset{
+  language=Rust,basicstyle=\ttfamily\footnotesize,numbers=left,numberstyle=\tiny\color{gray},
+  numbersep=8pt,frame=single,rulecolor=\color{bordergray},backgroundcolor=\color{lightgray},
+  breaklines=true,columns=fullflexible,keepspaces=true,showstringspaces=false,captionpos=b,
+  xleftmargin=1em,xrightmargin=1em
+}
+
+% ---------------------------------------------------------------------------
+% Tilil symbol: an ankh whose loop is a flower teardrop and whose shaft is a dagger.
+% Drawn in the current colour; the title page puts it white on royal blue.
+% ---------------------------------------------------------------------------
+\newcommand{\tililsymbol}[1][1]{%
+\begin{tikzpicture}[scale=#1,line cap=round,line join=round]
+  % teardrop loop (flower bud), point at the top
+  \draw[line width=1.6pt] (0,1.15) .. controls (-0.62,0.62) and (-0.52,0.12) .. (0,0.10)
+                                   .. controls (0.52,0.12) and (0.62,0.62) .. (0,1.15);
+  % crossbar of the ankh = the dagger's crossguard
+  \draw[line width=1.6pt] (-0.55,0.0) -- (0.55,0.0);
+  % dagger blade (filled), tip pointing down
+  \fill (-0.11,0.0) -- (0.11,0.0) -- (0.11,-0.85) -- (0,-1.15) -- (-0.11,-0.85) -- cycle;
+  % pommel/grip hint just under the loop
+  \fill (0,0.10) circle (0.05);
+\end{tikzpicture}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small TR-TEG-2026-AQT-001}
+\fancyhead[R]{\small aQiten P0: Audit of Akita and Formal Security Games}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\title{aQiten}
+\date{}
+
+\begin{document}
+\sloppy
+
+% ===========================================================================
+% TITLE PAGE
+% ===========================================================================
+\begin{titlepage}
+\thispagestyle{empty}
+\noindent
+\begin{tikzpicture}[remember picture,overlay]
+  \fill[tililblue] (current page.north west) rectangle ([yshift=-3.6in]current page.north east);
+  \shade[left color=tililblue,right color=tililblue3,opacity=0.85]
+        (current page.north west) rectangle ([yshift=-3.6in]current page.north east);
+  \node[white,anchor=center] at ([xshift=2.0in,yshift=-1.75in]current page.north west)
+        {\scalebox{2.6}{\color{white}\tililsymbol[1]}};
+  \node[white,anchor=west,align=left] at ([xshift=3.05in,yshift=-1.45in]current page.north west)
+        {{\fontsize{44}{48}\selectfont\bfseries\textdagger\textexclamdown L!L}\\[2pt]
+         {\Large Tilil Engineering Group}\\[1pt]
+         {\normalsize\itshape Kapsabet}};
+\end{tikzpicture}
+
+\vspace*{3.35in}
+\begin{center}
+{\Huge\bfseries aQiten}\\[0.7em]
+{\Large P0: What Akita Proves, Where Its Proof Leaks,\\[0.2em]
+and the Games a Zero-Knowledge, Quantum-Secure Successor Must Win}\\[0.9em]
+{\normalsize\itshape Revision 1.0 --- work package P0 of the aQiten charter}
+
+\vspace{0.55in}
+{\large Technical Report TR-TEG-2026-AQT-001}
+
+\vspace{0.7em}
+{\large Kiprop arap Yego}
+
+\vspace{0.7em}
+25 November 2026
+\end{center}
+\end{titlepage}
+
+\newpage
+\begin{center}\textbf{Abstract}\end{center}
+\noindent
+aQiten is meant to be an independent lattice polynomial-commitment framework that adds to Akita
+(Dao et al., ePrint 2026/1983) the two properties Akita explicitly lacks: zero knowledge and a quantum-random-oracle (QROM) security argument.
+This report is work package P0. It (i)~states what Akita proves, under which assumptions, from the full text of the paper;
+(ii)~lists, message by message, what an Akita proof reveals about the committed polynomial, which is the object a zero-knowledge design must hide;
+(iii)~fixes three formal security games, G1 (QROM knowledge soundness), G2 (hiding) and G3 (evaluation zero knowledge); and
+(iv)~records what P0 has \emph{not} verified, so that nothing is presented as established that is not.
+Conclusion: the paper itself names both gaps as future work (\S1.1 and \S14), the leakage is structural rather than local, and a ``partial'' zero-knowledge mode would be unsound; the whole transcript must be redesigned together.
+
+\tableofcontents
+\newpage
+
+\section{Conventions and Scope of Reading}
+Epistemic tags: \established\ (with source), \conjectureTag\ (with how it fails), \openproblem. Section numbers of the Akita paper are written ``A\S''.
+
+\begin{findingbox}[title={What was and was not read}]
+The 168-page paper (\code{papers/akita.pdf}) was extracted to text (about $10{,}400$ lines). \textbf{Read for this report:} A\S1 (introduction and contributions), A\S3.8 (coordinate-wise special soundness statement), A\S5.5 (the fold, Fig.~7), A\S8.2 (terminal), A\S10 (the stated security model), A\S14 (limitations and future work), Appendix~C (SIS estimation, first part) and Appendix~F.1--F.2 (corrections to prior work).
+\textbf{Not read line by line:} A\S2 (overview details), A\S3--4 formal development, A\S6--7 (norm and ring checks), A\S9, the proofs of A\S10, A\S11--13, Appendices A, B, D, E, G. Statements below about those parts are not made. Every claim in the leakage table is traced to a named section; anything outside is marked unverified.
+The Akita source repository (MIT OR Apache-2.0) was inspected at the level of its crate layout and its own \code{book/src/roadmap/zero-knowledge.md}; no code was run.
+\end{findingbox}
+
+\section{What Akita Is and What It Claims}
+\subsection{Construction in one paragraph}
+Akita is a polynomial commitment scheme for multilinear polynomials, built from Ajtai commitments over $R_q=\mathbb{F}_q[X]/(X^d+1)$ and folding (Greyhound/Hachi lineage). Each fold forms opening partials, binds them by a commitment, folds the source blocks with a challenge tuple $(c_i)$, commits to a successor witness $w'=(\hat z,\hat e,\hat t,\hat r)$ (digit-decomposed response, partials, inner commitments, quotients), and runs a fused sum-check (digit-range, optional Euclidean norm, ring relations) reducing everything to one opening claim on $w'$. A setup-offloading stage replaces the verifier's scan of the public setup by an opening of a precommitted setup prefix. The last fold hands over a \emph{terminal inner state} $t_i=A_{\mathrm{term}}s_i$ and the verifier checks the revealed response directly (A\S8.2).
+
+\subsection{Claims, as stated by the authors}
+\begin{center}
+\small\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}p{0.34\textwidth}p{0.45\textwidth}p{0.13\textwidth}@{}}
+\toprule
+\textbf{Claim} & \textbf{Content} & \textbf{Where}\\
+\midrule
+Assumption & Standard Module-SIS (parameters grow with the schedule) & A\S1, A\S9.4\\
+Soundness model & Knowledge soundness of the Fiat--Shamir transform \emph{in the classical ROM} only; ``not a QROM theorem''; QROM ``explicitly outside the scope'' & A\S3.8, A\S10, A\S14\\
+Parameter hardness & Each Module-SIS instance $\ge2^{128}$ under quantum ADPS16 Core-SVP; family-wide $\lambda_{\mathrm{fam}}>125$ bits (union over instances) & App.~C\\
+Zero knowledge & \emph{Not provided}; ``we would also like to bring zero-knowledge to Akita'' & A\S14\\
+Terminal & Response $z$ revealed in the clear and checked directly & A\S8.2\\
+Heuristics & Honest-prover response caps for later folds rest on a Gaussian-type model, not a proof & A\S2.8, \S14, App.~G\\
+Sizes (reported) & $61$--$70$\,KB proofs; offloaded verifier $16.2$\,ms vs.\ $1525$\,ms for Greyhound (standalone) & A\S1, A\S13\\
+\bottomrule
+\end{tabular}
+\end{center}
+\established\ (each row is a quotation or near-quotation of the cited section). The distinction in the second row matters for us: the Module-SIS \emph{parameters} are sized against quantum attackers, but the Fiat--Shamir \emph{reduction} is classical (A\S10: ``that parameter choice does not upgrade the random-oracle reduction to the QROM'').
+
+\subsection{Corrections the authors found in prior work (relevant to method)}
+Appendix~F.1 shows that the public Hachi ePrint's base-field specialisation does not bind the claimed partials ($S_y$): two $E$-linear checks on $k>2$ extension-valued discrepancies have a nontrivial joint kernel, and an explicit false $v'$ passes. It also shows that the first public Grand Danois version sampled a compression challenge $c'$ \emph{before} the commitment that bound the witness, so the Schwartz--Zippel argument fails on an adaptively chosen residual. Appendix~F.2 reports mismatches between released implementations and their papers.
+\established\ (read). \emph{Lesson for aQiten:} (a) challenge ordering is a soundness property, to be tested by adversarial provers that choose witnesses after seeing each challenge; (b) a scheme is not trusted because it is published; every transcript step we adopt gets a negative test.
+
+\section{Where an Akita Proof Leaks}
+\label{sec:leak}
+Zero knowledge (G3 below) requires the simulator to reproduce \emph{every} prover message from the claim alone. We therefore list every message of the fold (A\S5.5, Fig.~7) and of the terminal (A\S8.2).
+``Prover randomness'' means randomness sampled by the prover and unknown to the verifier; the specification of the fold lists none.
+
+\begin{center}
+\small\renewcommand{\arraystretch}{1.18}
+\begin{longtable}{@{}p{0.05\textwidth}p{0.30\textwidth}p{0.40\textwidth}p{0.13\textwidth}@{}}
+\toprule
+\textbf{ID} & \textbf{Message (source)} & \textbf{What it reveals about the witness} & \textbf{Status}\\
+\midrule
+\endhead
+L1 & Root commitment $u=B\hat t$, inner $t_i=As_i$ (A\S5.1--5.3) & Deterministic Ajtai images of the digits of $f$. Binding by Module-SIS; no randomness, hence no hiding guarantee. Whether the instance is computationally hiding depends on parameters and shape (cf.\ H1 of TR-TEG-2026-QLB-006, where the same structure is broken by LLL) & \openproblem\\
+L2 & Tensor column partials $S_y=f(y,r_{\mathrm{tail}})$ and tensor-reduction sum-check rounds (A\S3.7, \S5.5 step~0) & $2^\kappa$ evaluations of $f$ at partial points, plus round polynomials of $A_\eta g$; strictly more than the claimed $f(r)=v$ & \openproblem\\
+L3 & Partials binding payload $v=D\hat e$ or $v_{\mathrm{pub}}$ (step 1) & Deterministic image of the opening partials $e_i=\langle a,f_i\rangle$; no randomness & \openproblem\\
+L4 & Successor commitment to $w'=(\hat z,\hat e,\hat t,\hat r)$ (step 3) & Deterministic image of the digit-decomposed response, partials and inner commitments & \openproblem\\
+L5 & Digit-range sum-check, fused relation sum-check (step 5) & Round polynomials are functions of $w'$; the final claim $\tilde w'(r')=v'$ is one linear functional of $w'$ per level & \openproblem\\
+L6 & Squared-norm claim $E_{\mathrm{resp}}$ and its integer encoding (step 4, Euclidean route) & Exact $\|z\|_2^2$ of the folded response, a statistic of $\sum_i c_is_i$ & \openproblem\\
+L7 & Grinding nonce and retry count (step 2) & Retries are conditioned on witness-dependent norm bounds; the accepted $z$ is a conditioned distribution, not a fresh one. Standard rejection-sampling leakage applies unless masking is added & \conjectureTag\ (follows from A\S5.5 plus the standard argument; not shown by the authors)\\
+L8 & Terminal: clear partials $(e_i)$ and clear response $z=\sum_i c_is_i$ (A\S8.2) & Directly witness-dependent values in the clear & \established\ (stated by the authors)\\
+L9 & Stage 3 setup-product sum-check (A\S9) & Concerns the public setup only; no witness-dependent message in the portion read & \conjectureTag\ (A\S9 not read in full)\\
+\bottomrule
+\end{longtable}
+\end{center}
+\textit{Reading.} L1--L8 are witness-dependent messages with no prover randomness in the specification. The authors' own roadmap makes the same point: hiding the initial commitment alone is insufficient, ``each sumcheck sends round polynomials derived from the witness, each fold commits to values derived from the preceding witness, and terminal verification receives the final short witness in clear form''; an earlier partial masking experiment was removed rather than shipped as a partial mode.
+\established\ (A\S5.5, A\S8.2, A\S14, repository \code{book/src/roadmap/zero-knowledge.md}).
+
+\begin{proposition}[Why a partial mode is unsound]
+\label{prop:partial}
+Let $M_1,\dots,M_n$ be the prover's messages and let $\Pi_{\mathrm{leak}}\subseteq\{L1,\dots,L8\}$ be the set left unmasked. If any message in $\Pi_{\mathrm{leak}}$ is an invertible function of witness data (or of data from which the witness is determined), a distinguisher that sees only that message separates the real view from every simulator that does not use the witness.
+\end{proposition}
+\begin{proof}
+Take the unmasked message $M$ and a witness pair $(f_0,f_1)$ with $f_0(x)=f_1(x)$ and $M(f_0)\ne M(f_1)$ (it exists because $M$ is not constant on the witnesses consistent with the claim). The simulator sees the same input for both, so it cannot match both distributions. \qed
+\end{proof}
+\established\ (elementary). It justifies the charter rule that no partial ``zk'' feature exists.
+
+\section{The Security Games}
+\label{sec:games}
+Notation: $\mathsf{PCS}=(\mathsf{Setup},\mathsf{Commit},\mathsf{Open},\mathsf{Verify})$ for $\ell$-variate multilinear $f$ over $\mathbb{F}_q$; $\lambda$ the security parameter; $\mathcal{H}$ the random oracle; $\mathsf{Open}$ produces $\pi$ for the claim $f(x)=y$ against commitment $C$.
+
+\begin{definition}[G1: knowledge soundness in the QROM]
+There is a quantum extractor $\mathcal{E}$ such that for every quantum polynomial-time adversary $\mathcal{A}$ with quantum oracle access to $\mathcal{H}$ and at most $Q$ queries, if $\mathcal{A}$ outputs $(C,x,y,\pi)$ with $\mathsf{Verify}$ accepting with probability $\varepsilon$, then $\mathcal{E}^{\mathcal{A}}$ outputs $f$ with $f(x)=y$ and $C=\mathsf{Commit}(f;\rho)$ for some opening randomness $\rho$, except with probability $\varepsilon\cdot \mathrm{poly}(Q)\cdot\mathrm{negl}$-loss $\le \kappa_{\mathrm{qrom}}(Q,\lambda)$, where $\kappa_{\mathrm{qrom}}$ is stated explicitly in the theorem.
+\end{definition}
+Status: Akita proves the classical analogue with $\kappa_{\mathrm{FS}}=(Q+1)\cdot\mu\ell(k-1)/|\mathcal{X}|$ (A\S3.8) and says this ``is not a QROM theorem''. \openproblem\ for the quantum version.
+
+\begin{definition}[G2: hiding]
+For all quantum polynomial-time $\mathcal{A}$ and all $f_0,f_1$ of the same length, $\big|\Pr[\mathcal{A}(C_0)=1]-\Pr[\mathcal{A}(C_1)=1]\big|\le\mathsf{negl}(\lambda)$ where $C_b=\mathsf{Commit}(f_b;\rho_b)$ with fresh $\rho_b$. Computational hiding is proven by reduction to Module-LWE, with the parameter coupling to Module-SIS binding shown explicitly (the failure mode of H1 is the absence of such a coupling).
+\end{definition}
+
+\begin{definition}[G3: evaluation zero knowledge]
+There is a quantum polynomial-time simulator $\mathcal{S}$, which may program $\mathcal{H}$, such that for every $f$, $x$ with $y=f(x)$, the distributions
+$\big(C,\pi\big)\leftarrow\mathsf{Commit/Open}(f,x)$ and $\mathcal{S}(\mathsf{pp},x,y)$ are computationally (preferably statistically for the proof part) indistinguishable, \emph{including every intermediate message listed in \S\ref{sec:leak}}.
+\end{definition}
+\openproblem\ (neither property exists). Both definitions apply to the noninteractive protocol; the interactive honest-verifier version is a stepping stone only.
+
+\begin{remark}[Dependencies between the games]
+G3 for the proof reduces to G2 for the commitments plus statistical masking of L2--L8. G1 must survive the masking: the extractor must still obtain a weak opening, with the mask's norm included in the Module-SIS collision bound; this is the norm-bound coupling the authors list among the requirements. \conjectureTag\ \textit{How it fails:} if masking norms exceed what the Module-SIS parameters tolerate, binding and hiding cannot both be met at the chosen modulus.
+\end{remark}
+
+\section{Design Requirements Implied}
+These follow from \S\ref{sec:leak} and \S\ref{sec:games} and match, one for one, the six requirements the Akita authors list for any future proposal.
+\begin{enumerate}[leftmargin=1.6em]
+\item \textbf{Public/private split fixed first}: public $(C,x,y,\mathsf{pp})$; everything else private.
+\item \textbf{Account for L1--L9}: each has a masking or blinding mechanism and a simulator step in the proof.
+\item \textbf{Norm bounds preserved}: mask norms enter the Module-SIS collision radius; the exact Euclidean check (L6) is either removed from the public transcript or its leakage is bounded.
+\item \textbf{Sampling and rejection specified}: flooding versus rejection sampling; if rejection, the accepted transcript distribution must be shown independent of the witness (L7).
+\item \textbf{One acceptance rule}: a single verifier, malformed hiding data rejected without panics.
+\item \textbf{No partial mode selectable}: tests compare hidden and transparent statements and show no configuration enables only some masks.
+\end{enumerate}
+Every mask is committed \emph{before} any challenge that uses it (the lesson of Appendix~F.1).
+
+\section{Parameter Questions for P1}
+\begin{center}
+\small\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}p{0.30\textwidth}p{0.62\textwidth}@{}}
+\toprule
+\textbf{Question} & \textbf{Why it matters (source)}\\
+\midrule
+Prime $q\equiv5 \pmod 8$, split $s_{\mathrm{split}}=2$ & Invertibility of challenge differences for extraction; our earlier composite modulus in QALABASH cost about $680$ bits of binding (A\S3.1; TR-TEG-2026-QLB-006)\\
+Masking: flooding vs.\ rejection & Flooding bound $\Delta\le mB/Y$ adds about $\lambda$ bits to the collision norm; rejection uses the retry framework Akita already has (L7)\\
+Commitment form for hiding & BDLOP-type $c=A_1s+[I\,|\,A_2']r$ on every layer ($A,B,D,F,H$), with MSIS and MLWE parameters checked jointly\\
+Digit base ($b=8$ vs.\ smaller) & Range-check degree and norm growth under masking (A\S2, digit-base discussion: a larger base shortens the decomposition but allows larger digit differences in the next fold)\\
+Field profile & 32-, 64- and 128-bit backends exist in Akita; masking likely requires the larger profile \conjectureTag\\
+Quantum model for parameters & Quantum ADPS16 Core-SVP floor $2^{128}$ per instance, with a $2^{125}$ family-wide union bound (App.~C); aQiten adopts the same gate and adds a hiding-side estimator and an LLL regression\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Verification Status and Next Steps}
+\begin{center}
+\small\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}p{0.08\textwidth}p{0.58\textwidth}p{0.20\textwidth}@{}}
+\toprule
+\textbf{Tag} & \textbf{Item} & \textbf{Status}\\
+\midrule
+\established & Akita's stated assumptions, ROM-only soundness, no ZK, terminal in the clear & read in full text\\
+\established & Leakage items L1--L8 exist as messages of the specified protocol & read A\S5.5, A\S8.2\\
+\conjectureTag & L7 (grinding conditions the accepted distribution) and L9 (Stage 3 reveals nothing) & A\S9 not read\\
+\conjectureTag & No hiding of L1 at Akita's own parameters & not tested; the QALABASH LLL harness is the test to run (P1)\\
+\openproblem & Literature on QROM extraction for multi-round coordinate-wise special-sound protocols, collapse-binding of Ajtai/Module-SIS maps, lattice ZK sum-check & \emph{not yet checked against sources}\\
+\openproblem & Appendix~D, G, parts of C and E; Akita source behaviour versus paper & not read\\
+\bottomrule
+\end{tabular}
+\end{center}
+\textbf{Gate for P1:} (a) cite-check of every literature item used for the QROM track, verified against the source; (b) read Appendices C (rest), D, G and A\S6--7, A\S9, A\S10 proofs; (c) run the LLL hiding test on Akita's own commitment shapes through its published parameters; (d) review of this report. Only then does the algebra and estimator crate start.
+
+\subsection*{Revision history}
+\begin{tabular}{@{}p{0.07\textwidth}p{0.14\textwidth}p{0.7\textwidth}@{}}
+\toprule
+\textbf{Rev.} & \textbf{Date} & \textbf{Change}\\
+\midrule
+1.0 & 2026-11-25 & Audit of Akita (selected sections), leakage table L1--L9, games G1--G3, parameter questions, P1 gate.\\
+\bottomrule
+\end{tabular}
+
+\vfill
+\begin{center}\textit{Kiprop arap Yego}\end{center}
+\end{document}
