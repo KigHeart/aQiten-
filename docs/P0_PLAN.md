@@ -1,28 +1,66 @@
-# P0: audit and formalisation (not yet done)
+# P0: audit, formalisation, and construction review
 
-Inputs: the Akita paper (ePrint 2026/1983, to be supplied in full including
-Appendices C, D, F, G), the Akita repository (read-only reference), and the
-literature on lattice ZK, hiding PCS and Fiat-Shamir in the QROM.
+P0 is **partially complete, not closed**. The reports capture the Akita sections
+read so far and a proposed construction, but source reading and citation
+verification remain incomplete. P1 cryptographic implementation is gated on
+the mathematical and architecture questions below.
 
-Deliverables:
-1. `spec/p0_audit.tex`: what Akita proves, under which assumptions, and where
-   each of its messages leaks (sum-check rounds, fold commitments, terminal
-   response), message by message.
-2. Formal games G1-G3 and the leakage table feeding them.
-3. A citations table: every cited result checked against its source, with
-   status verified / unverified.
-4. Parameter questions to settle in P1 (modulus form, challenge family,
-   digit base, masking strategy: flooding vs rejection).
+## Inputs
 
-Gate: P1 does not start until (1)-(3) are reviewed.
+- papers/akita.pdf (Akita paper, ePrint 2026/1983).
+- Akita repository as a read-only reference.
+- Primary literature on lattice commitments, lattice zero knowledge,
+  Fiat-Shamir in the QROM, and quantum extraction.
 
-## Status (2026-11-25)
-`spec/aqt001_p0_audit.tex` (TR-TEG-2026-AQT-001, Rev. 1.0) delivers items 1 and 2 for the sections
-of the paper read so far, and lists exactly what is still unread (see its Sec. 1) and the P1 gate.
-Item 3 (citation table) is not done: literature claims for the QROM track are unverified.
+## Deliverables and status
 
-## Update (2026-11-25, later)
-`spec/aqt002_construction_plan.tex` (TR-TEG-2026-AQT-002) gives the construction plan: principles D1-D6,
-masked fold (box rejection, committed mask, extraction lemma), revealed-functional lemma (open for structured
-weights, item Z3), masked sum-check, parameter inequalities I1-I6, crate plan, QROM routes Q1-Q3, milestones.
-Still unread from the Akita paper: A Sec. 3-4, 9, 11-13, App. A, B, rest of C, E, G.
+1. Message-by-message leakage audit: spec/aqt001_p0_audit.tex (TR-001);
+   partial, with unread sections listed in the report.
+2. Security games G1-G3: initial formalisation in TR-001; review against the
+   complete protocol and final construction remains required.
+3. Citation verification: incomplete; theorem statements and reductions must
+   be checked against primary sources.
+4. Construction proposal: spec/aqt002_construction_plan.tex (TR-002); a plan,
+   not a proved construction.
+5. Independent mathematical review: spec/aqt002_independent_review.md on PR #1.
+6. Ring architecture gate: spec/aqt003_ring_architecture_gate.md on PR #1.
+   Exact reference arithmetic is required; NTT support is conditional on a
+   verified root-of-unity certificate.
+7. Architecture review: docs/ARCHITECTURE_REVIEW.md; reconciles the new crate
+   tree and dependency graph, including verifier isolation and test-only crates.
+
+## Akita sections still to read
+
+As recorded in TR-001/TR-002: A Sec. 3-4, 9, 11-13, Appendices A and B, and
+the remaining portions of C, E, and G. Reconcile this list as sections are
+completed; do not claim the audit is complete prematurely.
+
+## Gate to P1
+
+- Select a coherent ring architecture; do not combine q = 5 mod 8 with an
+  assumed full base-field negacyclic NTT at power-of-two degree d >= 4.
+- Extract Akita's concrete schedule tuple (q,d,n,m) at every level.
+- Specify augmented commitment and fold vector layouts with exact dimensions.
+- Complete commitment, revealed-functional, and masked-sum-check definitions.
+- Define the full rejection/retry transcript and prove its joint distribution.
+- Produce a reviewed simulator proof and parameter inequalities, or mark the
+  construction unresolved and choose a different design.
+- Enforce a verifier dependency boundary that excludes prover-only code.
+- Keep simulator, attacks, Akita oracle, and benchmark harnesses out of
+  production dependency paths.
+
+## Build order
+
+The proposed tree is in docs/TREE.md. Begin with error/codec/field, then exact
+reference ring arithmetic, estimator, transcript/challenges, parameter and
+schedule validators, and only then commitment. Masked sum-check and fold are
+blocked on their mathematical proof obligations. See docs/ARCHITECTURE_REVIEW.md.
+
+## Status snapshot — 2026-11-25
+
+- TR-001 and TR-002 are committed.
+- Box-rejection finite-domain checks were added on PR #1.
+- main now contains the proposed crate tree and visual dependency map.
+- No Rust crates or cryptographic implementation exist yet.
+- No zero-knowledge, MLWE/MSIS parameter, classical-ROM composition, or QROM
+  security claim is established.
