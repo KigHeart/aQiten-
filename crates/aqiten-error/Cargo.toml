@@ -1,0 +1,15 @@
+[package]
+name = "aqiten-error"
+description = "Shared error type and checked integer formulas for the aQiten workspace"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+publish.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
