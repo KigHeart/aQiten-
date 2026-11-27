@@ -1,0 +1,18 @@
+[package]
+name = "aqiten-ring"
+description = "The cyclotomic ring Z_q[X]/(X^D+1): exact reference multiplication, exact integer norms, balanced power-of-two digits"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+publish = false
+
+[lints]
+workspace = true
+
+[dependencies]
+aqiten-error = { path = "../aqiten-error" }
+aqiten-codec = { path = "../aqiten-codec" }
+aqiten-field = { path = "../aqiten-field" }

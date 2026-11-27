@@ -20,3 +20,12 @@ dependencies = [
  "aqiten-codec",
  "aqiten-error",
 ]
+
+[[package]]
+name = "aqiten-ring"
+version = "0.0.1"
+dependencies = [
+ "aqiten-codec",
+ "aqiten-error",
+ "aqiten-field",
+]
