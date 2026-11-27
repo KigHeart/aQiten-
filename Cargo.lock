@@ -29,3 +29,12 @@ dependencies = [
  "aqiten-error",
  "aqiten-field",
 ]
+
+[[package]]
+name = "aqiten-transcript"
+version = "0.0.1"
+dependencies = [
+ "aqiten-codec",
+ "aqiten-error",
+ "aqiten-field",
+]
