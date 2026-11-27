@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["crates/aqiten-error", "crates/aqiten-codec", "crates/aqiten-field", "crates/aqiten-ring", "crates/aqiten-transcript"]
+members = ["crates/aqiten-error", "crates/aqiten-codec", "crates/aqiten-field", "crates/aqiten-ring", "crates/aqiten-transcript", "crates/aqiten-challenges"]
 
 [workspace.package]
 version = "0.0.1"

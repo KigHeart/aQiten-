@@ -3,6 +3,16 @@
 version = 4
 
 [[package]]
+name = "aqiten-challenges"
+version = "0.0.1"
+dependencies = [
+ "aqiten-error",
+ "aqiten-field",
+ "aqiten-ring",
+ "aqiten-transcript",
+]
+
+[[package]]
 name = "aqiten-codec"
 version = "0.0.1"
 dependencies = [

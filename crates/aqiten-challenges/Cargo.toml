@@ -1,0 +1,19 @@
+[package]
+name = "aqiten-challenges"
+description = "Sparse folding-challenge families in Z_q[X]/(X^D+1) for q = 5 mod 8: exact cardinality, uniform sampler, exact unit test, certified difference invertibility, sound operator-norm bound"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+publish = false
+
+[lints]
+workspace = true
+
+[dependencies]
+aqiten-error = { path = "../aqiten-error" }
+aqiten-field = { path = "../aqiten-field" }
+aqiten-ring = { path = "../aqiten-ring" }
+aqiten-transcript = { path = "../aqiten-transcript" }
